@@ -144,15 +144,38 @@ export const createMarketChart = (rootElement) => {
 
   // 이미지 불릿 추가
   series.bullets.push(function () {
+    const circle = am5.Circle.new(root, {
+      radius: 50,
+      fill: am5.color(0xffffff),
+      strokeWidth: 2,
+      stroke: am5.color(0xffffff),
+    });
+
     return am5.Bullet.new(root, {
-      locationX: 1,
+      locationX: 0.98,
       sprite: am5.Picture.new(root, {
-        width: 35,
-        height: 35,
+        width: 40,
+        height: 40,
         centerY: am5.p50,
         centerX: am5.p0,
         templateField: "image",
-        radius: 17.5,
+        mask: circle,
+        shadowColor: am5.color(0x000000),
+        shadowBlur: 4,
+        shadowOffsetX: 0,
+        shadowOffsetY: 2,
+        shadowOpacity: 0.2,
+        stroke: am5.color(0xffffff),
+        strokeWidth: 2,
+        filters: [
+          {
+            type: "drop-shadow",
+            blur: 8,
+            opacity: 0.3,
+            dx: 0,
+            dy: 2,
+          },
+        ],
       }),
     });
   });
