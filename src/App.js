@@ -1,8 +1,9 @@
 import "./App.css";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import Home from "./components/Home";
-import Hearder from "./components/Hearder";
-import Market from "./components/Market";
+import Home from "./components/main/Home";
+import Hearder from "./components/common/Header";
+import Footer from "./components/common/Footer";
+import Market from "./components/details/Market";
 function App() {
   return (
     <BrowserRouter>
@@ -13,6 +14,8 @@ function App() {
           <Route path="/" element={<Home />} />
           <Route path="/market" element={<Market />} />
         </Routes>
+
+        <Footer />
       </div>
     </BrowserRouter>
   );
