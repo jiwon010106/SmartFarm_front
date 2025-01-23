@@ -13,7 +13,7 @@ const Footer = () => {
           <div className="mb-2 lg:mb-0">
             <img
               src={AnifarmLogo}
-              alt="로고"
+              alt="Logo"
               className="w-[30px] md:w-[50px] mb-2"
             />
             <p className="text-xs md:text-sm text-gray-600">
