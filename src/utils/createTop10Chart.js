@@ -3,12 +3,13 @@ import Highcharts from "highcharts";
 const createTop10Chart = (containerId) => {
   return Highcharts.chart(containerId, {
     chart: {
-      type: "column",
+      type: "bar",
     },
     title: {
       text: "[2024년 1월 1주차 ~ 2024년 12월 4주차] 매출 TOP 10입니다.",
       align: "center",
     },
+
     xAxis: {
       categories: [
         "쌀",
@@ -59,6 +60,48 @@ const createTop10Chart = (containerId) => {
           369462, 305510, 273517, 226059, 199632, 181544, 178672, 169834,
           113815, 104944,
         ],
+      },
+    ],
+  });
+};
+
+export const createTop5Chart = (containerId) => {
+  return Highcharts.chart(containerId, {
+    chart: {
+      type: "bar",
+      backgroundColor: "#00C092",
+      textColor: "white",
+    },
+    title: {
+      text: "한눈에 보는 소비트렌드 TOP 5",
+      align: "left",
+    },
+    xAxis: {
+      textColor: "white",
+      categories: ["1위 딸기", "2위 김치", "3위 쌀", "4위 사과", "5위 김"],
+      crosshair: true,
+    },
+    yAxis: {
+      min: 0,
+      title: {
+        text: "매출액",
+      },
+    },
+
+    plotOptions: {
+      bar: {
+        pointPadding: 0.2,
+        borderWidth: 0,
+      },
+    },
+    series: [
+      {
+        name: "전년동기",
+        data: [308.3, 168.3, 137.4, 86.2, 63.3],
+      },
+      {
+        name: "기준일",
+        data: [395.3, 187.6, 111.2, 106.7, 79.0],
       },
     ],
   });
