@@ -3,7 +3,6 @@ import { useDispatch } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
 import { fetchPostLoginData } from "../../redux/slices/authslice.js";
 import { setToken } from "../../redux/slices/loginslice.js";
-import AnifarmLogo from "../../assets/smartfarm.png";
 
 const Login = () => {
   const dispatch = useDispatch();
@@ -53,7 +52,7 @@ const Login = () => {
   return (
     <div className="flex flex-col justify-center items-center h-auto w-full mb-16">
       <div className="logo w-[250px] md:w-[350px] mt-20 md:mt-32 mb-10 md:mb-12">
-        <img src={AnifarmLogo} alt="Logo" />
+        {/*<img src={AnifarmLogo} alt="Logo" /> */}
       </div>
       <div className="shadow-lg px-6 md:px-12 py-8 md:py-10 w-[90%] md:w-[500px] border mb-16 rounded-lg">
         <h2 className="text-2xl md:text-3xl font-extrabold mb-4 md:mb-6 text-center">

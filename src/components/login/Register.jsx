@@ -1,8 +1,7 @@
-/* - Imports: React와 Redux의 훅, React Router의 훅을 사용합니다. authSlice에서 여러 액션을 가져와 사용하고, 로고 이미지를 가져옵니다. */
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
-import AnifarmLogo from "../../assets/smartfarm.png";
+
 import {
   fetchPostAuthData,
   fetchPostEmailVerificationData,
@@ -56,7 +55,11 @@ const Register = () => {
       const result = await dispatch(
         fetchPostEmailVerificationData(value.email)
       ).unwrap();
-      alert("인증 코드가 발송되었습니다.");
+
+      // 서버로부터 받은 메시지를 알림으로 표시
+      if (result.message) {
+        alert(result.message);
+      }
     } catch (error) {
       alert("인증 코드 발송 실패");
     }
@@ -146,7 +149,7 @@ const Register = () => {
   return (
     <div className="flex flex-col justify-center items-center h-auto mb-16">
       <div className="logo w-[250px] md:w-[350px] mt-20 md:mt-32 mb-10 md:mb-12">
-        <img src={AnifarmLogo} alt="logo" />
+        {/*<img src={AnifarmLogo} alt="logo" /> */}
       </div>
       <div className="shadow-lg px-6 md:px-12 py-8 md:py-10 w-[90%] md:w-[500px] border mb-16 rounded-lg">
         <h2 className="text-2xl md:text-3xl font-bold mb-4 md:mb-6 text-center">
@@ -168,7 +171,7 @@ const Register = () => {
               />
               <button
                 onClick={handleSendVerification}
-                className="w-[30%] py-2 bg-blue-400 text-white rounded-md text-[11px] md:text-[15px] hover:bg-blue-500 transition-all duration-200 "
+                className="w-[30%] py-2 bg-green-400 text-white rounded-md text-[11px] md:text-[15px] hover:bg-green-500 transition-all duration-200 "
                 type="button"
               >
                 인증코드 발송
@@ -191,7 +194,7 @@ const Register = () => {
                 />
                 <button
                   onClick={handleVerifyCode}
-                  className="w-[30%] py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-all duration-200 text-base"
+                  className="w-[30%] py-2 bg-green-600 text-white rounded-md hover:bg-green-700 transition-all duration-200 text-base"
                   type="button"
                 >
                   확인
@@ -257,13 +260,13 @@ const Register = () => {
           </div>
           <div className="flex justify-between items-center gap-2 mb-6">
             <button
-              className="w-full h-10 md:h-12 bg-blue-600 text-white rounded-md hover:bg-blue-700 hover:text-white transition-all duration-200 text-sm md:text-base"
+              className="w-full h-10 md:h-12 bg-green-600 text-white rounded-md hover:bg-green-700 hover:text-white transition-all duration-200 text-sm md:text-base"
               type="submit"
             >
               가입 하기
             </button>
             <Link to="/" className="w-full h-10 md:h-12">
-              <button className="w-full h-10 md:h-12 border border-neutral-700 rounded-md hover:text-blue-600 hover:border-blue-600 transition-all duration-200 text-sm md:text-base">
+              <button className="w-full h-10 md:h-12 border border-neutral-700 rounded-md hover:text-green-600 hover:border-green-600 transition-all duration-200 text-sm md:text-base">
                 가입 취소
               </button>
             </Link>

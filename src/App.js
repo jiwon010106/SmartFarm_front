@@ -23,7 +23,6 @@ function App() {
             <Route path="/login" element={<Login />} />
             <Route path="/mypage" element={<Mypage />} />
           </Routes>
-
           <Footer />
         </div>
       </Router>

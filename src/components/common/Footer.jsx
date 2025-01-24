@@ -1,8 +1,5 @@
 import React from "react";
 import AnifarmLogo from "../../assets/smartfarm.png";
-{
-  /* 로고 만들어지면 연결 하기 */
-}
 
 const Footer = () => {
   return (
