@@ -13,9 +13,17 @@ const getMarketFetchThunk = (actionType, apiURL) => {
   });
 };
 
-export const fetchGetMarketData = getMarketFetchThunk(
-  "fetchGetMarketData",
-  GET_MARKET_API_URL
+export const fetchGetMarketData = createAsyncThunk(
+  "chart/fetchGetMarketData",
+  async (_, { rejectWithValue }) => {
+    try {
+      const response = await getMarketRequest();
+      return response;
+    } catch (error) {
+      console.error("마켓 데이터 fetch 오류:", error);
+      return rejectWithValue(error.message);
+    }
+  }
 );
 
 const getTop10FetchThunk = (actionType, apiURL) => {
@@ -51,11 +59,24 @@ const apiSlice = createSlice({
     // 초기 상태 지정
     getMarketData: null,
     getTop10Data: null,
+    loading: false,
+    error: null,
   },
   extraReducers: (builder) => {
     builder
-      .addCase(fetchGetMarketData.fulfilled, handleFulfilled("getMarketData"))
-      .addCase(fetchGetMarketData.rejected, handleRejected)
+      .addCase(fetchGetMarketData.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(fetchGetMarketData.fulfilled, (state, action) => {
+        state.loading = false;
+        state.getMarketData = action.payload;
+      })
+      .addCase(fetchGetMarketData.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload || "데이터 로딩 실패";
+        console.error("마켓 데이터 로딩 실패:", action.payload);
+      })
 
       .addCase(fetchGetTop10Data.fulfilled, handleFulfilled("getTop10Data"))
       .addCase(fetchGetTop10Data.rejected, handleRejected);

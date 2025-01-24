@@ -1,5 +1,6 @@
 import "./App.css";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import React from "react";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Home from "./components/main/Home";
 import Hearder from "./components/common/Header";
 import Footer from "./components/common/Footer";
@@ -13,7 +14,7 @@ import store from "./redux/store"; // 스토어를 생성한 파일 경로
 function App() {
   return (
     <Provider store={store}>
-      <BrowserRouter>
+      <Router>
         <div className="App">
           <Hearder />
 
@@ -27,7 +28,7 @@ function App() {
 
           <Footer />
         </div>
-      </BrowserRouter>
+      </Router>
     </Provider>
   );
 }

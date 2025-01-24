@@ -1,3 +1,5 @@
+import axios from "axios";
+
 /* ====== Common Post Request Function ====== */
 export async function postRequest(url, options) {
   const defaultOptions = {
@@ -152,21 +154,33 @@ export async function getRequest(url) {
   }
 }
 
-export async function getMarketRequest(url) {
+// axios 인스턴스 생성
+const instance = axios.create({
+  baseURL: "http://localhost:8000", // 서버의 실제 주소로 변경해주세요
+  timeout: 5000,
+  headers: {
+    "Content-Type": "application/json",
+  },
+});
+
+export const getMarketRequest = async () => {
   try {
-    const response = await fetch(url);
+    const response = await instance.get("/api/sales/market");
 
-    console.error("응답 상태:", response.status);
-
-    if (!response.ok) {
-      throw new Error("Network response was not ok");
+    if (!response.data) {
+      throw new Error("데이터가 없습니다.");
     }
-    return response.json();
+
+    console.log("서버 응답 데이터:", response.data);
+    return response.data;
   } catch (error) {
-    console.error("요청 처리 중 오류 발생:", error);
+    console.error("마켓 데이터 요청 오류:", error);
+    if (error.response) {
+      console.error("서버 에러 상세:", error.response.data);
+    }
     throw error;
   }
-}
+};
 
 export async function getTop10Request(url) {
   try {
