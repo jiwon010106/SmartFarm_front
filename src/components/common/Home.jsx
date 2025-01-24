@@ -14,7 +14,7 @@ const Home = () => {
   return (
     <div className="container">
       <h1> Welcome to the Home Page </h1>
-      <Link to="/market">Go to Market</Link>
+      <Link to="/pricingInformation">Go to Pricing Information</Link>
       <div className="w-[500px] h-[420px] text-white rounded-lg p-4">
         <div id="top5-chart" ref={chartRef} />
       </div>

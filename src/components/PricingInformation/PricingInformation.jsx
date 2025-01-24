@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import RaceChart from "./charts/RaceChart";
 import Top10Chart from "./charts/Top10Chart";
-import market from "../../assets/images/free_icon_cart.png";
+// import market from "../../assets/images/free_icon_cart.png";
 
 const PricingInformation = () => {
   const [activeChart, setActiveChart] = useState(null);
@@ -17,7 +17,7 @@ const PricingInformation = () => {
   return (
     <div className="container">
       <div className="flex items-center gap-2">
-        <img src={market} alt="장바구니" className="w-8 h-8" />
+        {/* <img src={market} alt="장바구니" className="w-8 h-8" /> */}
         <h1 className="title text-left text-4xl font-bold">
           대형마트 소비트렌드
         </h1>
