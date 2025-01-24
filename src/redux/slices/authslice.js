@@ -11,6 +11,7 @@ import {
   putRequest,
   deleteRequest,
 } from "../../utils/requestMethods.js";
+import axios from "axios";
 
 // 회원가입 요청
 const postAuthFetchThunk = (actionType, apiURL) => {
@@ -37,24 +38,16 @@ export const fetchPostAuthData = postAuthFetchThunk(
 );
 
 // 이메일 인증 요청
-const postEmailVerificationFetchThunk = (actionType, apiURL) => {
-  return createAsyncThunk(actionType, async (email, { rejectWithValue }) => {
+export const fetchPostEmailVerificationData = createAsyncThunk(
+  "auth/fetchPostEmailVerificationData",
+  async (email) => {
     try {
-      const options = {
-        body: JSON.stringify({ email }),
-      };
-      const response = await postRequest(apiURL, options);
-      console.log("서버응답:", response);
-      return response;
+      const response = await axios.post("/auth/email-verification", { email });
+      return response.data;
     } catch (error) {
-      return rejectWithValue(error.message || "알 수 없는 오류");
+      throw error.response.data;
     }
-  });
-};
-
-export const fetchPostEmailVerificationData = postEmailVerificationFetchThunk(
-  "fetchPostEmailVerification", // action type
-  POST_EMAIL_VERIFICATION_API_URL // 요청 url
+  }
 );
 
 // 로그인 요청

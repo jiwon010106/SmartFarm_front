@@ -56,7 +56,6 @@ const Register = () => {
         fetchPostEmailVerificationData(value.email)
       ).unwrap();
 
-      // 서버로부터 받은 메시지를 알림으로 표시
       if (result.message) {
         alert(result.message);
       }
@@ -65,9 +64,14 @@ const Register = () => {
     }
   };
 
-  /* - 이메일 인증 코드 발송: 이메일 입력 후 인증 코드를 발송하는 함수입니다. 이메일이 입력되지 않으면 경고를 표시합니다. */
+  /* - 인증 코드 발송: 이메일 입력 후 인증 코드를 발송하는 함수입니다. 이메일이 입력되지 않으면 경고를 표시합니다. */
   const handleVerifyCode = () => {
-    if (userInputCode === verificationCode.data.verificationCode) {
+    if (!userInputCode) {
+      alert("인증 코드를 입력해주세요.");
+      return;
+    }
+
+    if (userInputCode === verificationCode?.data?.verificationCode) {
       dispatch(verifyEmail());
       alert("이메일 인증이 완료되었습니다.");
     } else {
