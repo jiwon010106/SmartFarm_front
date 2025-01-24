@@ -1,7 +1,6 @@
 import * as am5 from "@amcharts/amcharts5";
 import * as am5xy from "@amcharts/amcharts5/xy";
 import am5themes_Animated from "@amcharts/amcharts5/themes/Animated";
-import { marketData } from "./marketData";
 
 // 이미지 import
 import strawberry from "../assets/images/strawberry.jpg";
@@ -30,7 +29,8 @@ import cabbage from "../assets/images/cabbage.jpg";
 import oyster from "../assets/images/oyster.jpg";
 import tomato2 from "../assets/images/tomatoes2.jpg";
 import tomato1 from "../assets/images/tomatoes.jpg";
-export const createMarketChart = (rootElement) => {
+
+export const createMarketChart = (rootElement, marketData) => {
   let period = "202401";
   let root = am5.Root.new(rootElement);
   const stepDuration = 2000;
@@ -296,23 +296,25 @@ export const createMarketChart = (rootElement) => {
   }, 100);
 
   function setInitialData() {
-    let d = marketData[period];
-    for (let n in d) {
-      series.data.push({
-        network: n,
-        value: d[n],
-        image: {
-          src: itemImages[n],
-        },
-      });
-      yAxis.data.push({ network: n });
+    if (marketData && marketData[period]) {
+      let d = marketData[period];
+      for (let n in d) {
+        series.data.push({
+          network: n,
+          value: d[n],
+          image: {
+            src: itemImages[n],
+          },
+        });
+        yAxis.data.push({ network: n });
+      }
     }
   }
 
   function updateData() {
     let itemsWithNonZero = 0;
 
-    if (marketData[period]) {
+    if (marketData && marketData[period]) {
       const year = period.substring(0, 4);
       const month = Math.ceil(parseInt(period.substring(4)) / 4.345);
 

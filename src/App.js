@@ -9,6 +9,7 @@ import Login from "./components/login/Login";
 import Mypage from "./components/login/Mypage";
 import { Provider } from "react-redux";
 import store from "./redux/store"; // 스토어를 생성한 파일 경로
+import PricingInformation from "./components/PricingInformation/PricingInformation";
 
 function App() {
   return (
@@ -19,6 +20,10 @@ function App() {
 
           <Routes>
             <Route path="/" element={<Home />} />
+            <Route
+              path="/pricingInformation"
+              element={<PricingInformation />}
+            />
             <Route path="/register" element={<Register />} />
             <Route path="/login" element={<Login />} />
             <Route path="/mypage" element={<Mypage />} />
