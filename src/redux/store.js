@@ -9,7 +9,7 @@ const store = configureStore({
   reducer: combineReducers({
     auth: authReducer, // 값은 만드는 이름
     login: loginReducer,
-    chart: apiReducer,
+    apis: apiReducer,
   }),
 });
 
