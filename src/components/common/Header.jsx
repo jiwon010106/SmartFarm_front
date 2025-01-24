@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
-import Mypage from "../category/Mypage";
+import Mypage from "../login/Mypage";
 import { clearToken } from "../../redux/slices/loginslice.js";
 import { useDispatch, useSelector } from "react-redux";
 import AnifarmLogo from "../../assets/smartfarm.png";
