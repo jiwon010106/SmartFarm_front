@@ -5,7 +5,7 @@ import {
   POST_EMAIL_VERIFICATION_API_URL,
   UPDATE_AUTH_API_URL,
   DELETE_AUTH_API_URL,
-} from "../../utils/apiUrl.js";
+} from "../../utils/apiurl.js";
 import {
   postRequest,
   putRequest,

@@ -1,5 +1,5 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import { GET_TOP10_API_URL, GET_MARKET_API_URL } from "../../utils/apiUrl";
+import { GET_TOP10_API_URL, GET_MARKET_API_URL } from "../../utils/apiurl";
 import { getMarketRequest, getTop10Request } from "../../utils/requestMethods";
 
 //update item data
