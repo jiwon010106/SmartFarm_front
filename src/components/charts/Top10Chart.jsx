@@ -1,5 +1,5 @@
 import React, { useEffect, useRef } from "react";
-import createTop10Chart from "../../utils/createTop10Chart";
+import createTop10Chart from "../../data/createTop10Chart";
 
 const Top10Chart = () => {
   const chartRef = useRef(null);

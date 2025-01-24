@@ -1,6 +1,6 @@
 import React, { useEffect, useRef } from "react";
 import { Link } from "react-router-dom";
-import { createTop5Chart } from "../../utils/createTop10Chart";
+import { createTop5Chart } from "../../data/createTop10Chart";
 
 const Home = () => {
   const chartRef = useRef(null);

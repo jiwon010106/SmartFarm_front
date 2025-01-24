@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import { createMarketChart } from "../../utils/marketChart";
+import { createMarketChart } from "../../data/marketChart";
 
 const RaceChart = () => {
   useEffect(() => {
