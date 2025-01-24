@@ -4,35 +4,19 @@ import { getMarketRequest, getTop10Request } from "../../utils/requestMethods";
 
 //update item data
 const getMarketFetchThunk = (actionType, apiURL) => {
-  return createAsyncThunk(actionType, async (updateData) => {
-    const options = {
-      body: JSON.stringify(updateData),
-    };
-
-    return await getMarketRequest(apiURL, options);
+  return createAsyncThunk(actionType, async () => {
+    return await getMarketRequest(apiURL);
   });
 };
 
-export const fetchGetMarketData = createAsyncThunk(
-  "chart/fetchGetMarketData",
-  async (_, { rejectWithValue }) => {
-    try {
-      const response = await getMarketRequest();
-      return response;
-    } catch (error) {
-      console.error("마켓 데이터 fetch 오류:", error);
-      return rejectWithValue(error.message);
-    }
-  }
+export const fetchGetMarketData = getMarketFetchThunk(
+  "fetchGetMarketData",
+  GET_MARKET_API_URL
 );
 
 const getTop10FetchThunk = (actionType, apiURL) => {
-  return createAsyncThunk(actionType, async (updateData) => {
-    const options = {
-      body: JSON.stringify(updateData),
-    };
-
-    return await getTop10Request(apiURL, options);
+  return createAsyncThunk(actionType, async () => {
+    return await getTop10Request(apiURL);
   });
 };
 

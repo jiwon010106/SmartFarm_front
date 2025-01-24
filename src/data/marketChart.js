@@ -254,7 +254,7 @@ export const createMarketChart = (rootElement) => {
   function getSeriesItem(category) {
     for (var i = 0; i < series.dataItems.length; i++) {
       var dataItem = series.dataItems[i];
-      if (dataItem.get("categoryY") == category) {
+      if (dataItem.get("categoryY") === category) {
         return dataItem;
       }
     }
@@ -273,7 +273,7 @@ export const createMarketChart = (rootElement) => {
         let deltaPosition =
           (index - dataItem.get("index", 0)) / series.dataItems.length;
 
-        if (dataItem.get("index") != index) {
+        if (dataItem.get("index") !== index) {
           dataItem.set("index", index);
           dataItem.set("deltaPosition", -deltaPosition);
           dataItem.animate({
