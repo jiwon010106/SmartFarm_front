@@ -3,11 +3,13 @@ import { combineReducers, configureStore } from "@reduxjs/toolkit";
 // configureStore: 스토어를 생성하는 함수
 import authReducer from "./slices/authslice";
 import loginReducer from "./slices/loginslice";
+import apiReducer from "./slices/apiSlice";
 
 const store = configureStore({
   reducer: combineReducers({
     auth: authReducer, // 값은 만드는 이름
     login: loginReducer,
+    chart: apiReducer,
   }),
 });
 

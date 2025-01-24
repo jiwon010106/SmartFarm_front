@@ -151,3 +151,34 @@ export async function getRequest(url) {
     throw error;
   }
 }
+
+export async function getMarketRequest(url) {
+  try {
+    const response = await fetch(url);
+
+    console.error("응답 상태:", response.status);
+
+    if (!response.ok) {
+      throw new Error("Network response was not ok");
+    }
+    return response.json();
+  } catch (error) {
+    console.error("요청 처리 중 오류 발생:", error);
+    throw error;
+  }
+}
+
+export async function getTop10Request(url) {
+  try {
+    const response = await fetch(url);
+
+    console.error("응답 상태:", response.status);
+    if (!response.ok) {
+      throw new Error("Network response was not ok");
+    }
+    return response.json();
+  } catch (error) {
+    console.error("요청 처리 중 오류 발생:", error);
+    throw error;
+  }
+}
