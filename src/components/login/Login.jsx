@@ -23,6 +23,9 @@ const Login = () => {
   const handleSubmit = async (e) => {
     e.preventDefault(); // 쿼리가 잡히지 않게(경로 표시X)
 
+    // id 값을 로그로 출력
+    // console.log(value.id);
+
     if (value.email === "" || value.password === "") {
       alert("email, password는 필수 입력값입니다.");
       return;
