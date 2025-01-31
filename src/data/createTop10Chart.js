@@ -1,28 +1,27 @@
 import Highcharts from "highcharts";
 
-const createTop10Chart = (containerId) => {
+const createTop10Chart = (containerId, rawData) => {
+  // 데이터 형식 변환
+  const formattedData = {
+    categories: rawData.map((item) => item.category),
+    previousYearData: rawData.map(
+      (item) => parseInt(item.previous_year) / 1000
+    ), // 백만원 단위로 변환
+    currentYearData: rawData.map((item) => parseInt(item.base_date) / 1000), // 백만원 단위로 변환
+  };
+
+  // console.log("변환된 데이터:", formattedData); // 디버깅용
+
   return Highcharts.chart(containerId, {
     chart: {
-      type: "bar",
+      type: "column",
     },
     title: {
       text: "[2024년 1월 1주차 ~ 2024년 12월 4주차] 매출 TOP 10입니다.",
       align: "center",
     },
-
     xAxis: {
-      categories: [
-        "쌀",
-        "사과",
-        "딸기",
-        "수박",
-        "감귤",
-        "김",
-        "포도",
-        "바나나",
-        "방울토마토",
-        "참외",
-      ],
+      categories: formattedData.categories,
       crosshair: true,
     },
     yAxis: {
@@ -35,7 +34,7 @@ const createTop10Chart = (containerId) => {
       headerFormat: '<span style="font-size:10px">{point.key}</span><table>',
       pointFormat:
         '<tr><td style="color:{series.color};padding:0">{series.name}: </td>' +
-        '<td style="padding:0"><b>{point.y}백만원</b></td></tr>',
+        '<td style="padding:0"><b>{point.y:.1f}백만원</b></td></tr>',
       footerFormat: "</table>",
       shared: true,
       useHTML: true,
@@ -45,21 +44,21 @@ const createTop10Chart = (containerId) => {
         pointPadding: 0.2,
         borderWidth: 0,
       },
+      bar: {
+        dataLabels: {
+          enabled: true,
+          format: "{point.y:.1f}",
+        },
+      },
     },
     series: [
       {
         name: "전년동기",
-        data: [
-          400941, 251834, 248674, 166624, 196384, 163389, 195159, 159379,
-          108741, 103429,
-        ],
+        data: formattedData.previousYearData,
       },
       {
         name: "기준일",
-        data: [
-          369462, 305510, 273517, 226059, 199632, 181544, 178672, 169834,
-          113815, 104944,
-        ],
+        data: formattedData.currentYearData,
       },
     ],
   });
