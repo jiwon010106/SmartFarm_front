@@ -25,6 +25,15 @@ export const fetchGetTop10Data = getTop10FetchThunk(
   GET_TOP10_API_URL
 );
 
+export const fetchGetTop5Data = createAsyncThunk(
+  "fetchGetTop5Data",
+  async () => {
+    const response = await getTop10Request(GET_TOP10_API_URL);
+    // Top 10 데이터에서 상위 5개만 추출
+    return response.slice(0, 5);
+  }
+);
+
 // handleFulfilled 함수 정의 : 요청 성공 시 상태 업데이트 로직을 별도의 함수로 분리
 const handleFulfilled = (stateKey) => (state, action) => {
   state[stateKey] = action.payload; // action.payload에 응답 데이터가 들어있음
@@ -43,6 +52,7 @@ const apiSlice = createSlice({
     // 초기 상태 지정
     getMarketData: null,
     getTop10Data: null,
+    getTop5Data: null, // Top5 데이터 상태 추가
     loading: false,
     error: null,
   },
@@ -63,7 +73,20 @@ const apiSlice = createSlice({
       })
 
       .addCase(fetchGetTop10Data.fulfilled, handleFulfilled("getTop10Data"))
-      .addCase(fetchGetTop10Data.rejected, handleRejected);
+      .addCase(fetchGetTop10Data.rejected, handleRejected)
+
+      .addCase(fetchGetTop5Data.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(fetchGetTop5Data.fulfilled, (state, action) => {
+        state.loading = false;
+        state.getTop5Data = action.payload;
+      })
+      .addCase(fetchGetTop5Data.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload || "데이터 로딩 실패";
+      });
   },
 }); // slice 객체 저장
 

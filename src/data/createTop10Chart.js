@@ -64,7 +64,16 @@ const createTop10Chart = (containerId, rawData) => {
   });
 };
 
-export const createTop5Chart = (containerId) => {
+export const createTop5Chart = (containerId, rawData) => {
+  // 데이터 형식 변환
+  const formattedData = {
+    categories: rawData.map((item, index) => `${index + 1}위 ${item.category}`),
+    previousYearData: rawData.map(
+      (item) => parseInt(item.previous_year) / 1000
+    ),
+    currentYearData: rawData.map((item) => parseInt(item.base_date) / 1000),
+  };
+
   return Highcharts.chart(containerId, {
     chart: {
       type: "bar",
@@ -77,30 +86,33 @@ export const createTop5Chart = (containerId) => {
     },
     xAxis: {
       textColor: "white",
-      categories: ["1위 딸기", "2위 김치", "3위 쌀", "4위 사과", "5위 김"],
+      categories: formattedData.categories,
       crosshair: true,
     },
     yAxis: {
       min: 0,
       title: {
-        text: "매출액",
+        text: "매출액(백만원)",
       },
     },
-
     plotOptions: {
       bar: {
         pointPadding: 0.2,
         borderWidth: 0,
+        dataLabels: {
+          enabled: true,
+          format: "{point.y:.1f}",
+        },
       },
     },
     series: [
       {
         name: "전년동기",
-        data: [308.3, 168.3, 137.4, 86.2, 63.3],
+        data: formattedData.previousYearData,
       },
       {
         name: "기준일",
-        data: [395.3, 187.6, 111.2, 106.7, 79.0],
+        data: formattedData.currentYearData,
       },
     ],
   });
