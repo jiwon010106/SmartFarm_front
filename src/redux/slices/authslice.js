@@ -42,7 +42,9 @@ export const fetchPostEmailVerificationData = createAsyncThunk(
   "auth/fetchPostEmailVerificationData",
   async (email) => {
     try {
-      const response = await axios.post(POST_EMAIL_VERIFICATION_API_URL, { email });
+      const response = await axios.post(POST_EMAIL_VERIFICATION_API_URL, {
+        email,
+      });
       return response.data;
     } catch (error) {
       throw error.response.data;

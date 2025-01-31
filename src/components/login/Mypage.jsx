@@ -3,6 +3,7 @@ import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { FaUser, FaEnvelope, FaCalendar } from "react-icons/fa";
+import { POST_MYPAGE_API_URL } from "../../utils/apiurl";
 
 const Mypage = () => {
   const navigate = useNavigate();
@@ -31,13 +32,17 @@ const Mypage = () => {
     }
     const fetchUserInfo = async () => {
       try {
-        const response = await axios.get("/account/info");
+        const response = await axios.get(POST_MYPAGE_API_URL, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
         setUserInfo(response.data);
       } catch (err) {
         console.error("사용자 정보 로드 에러:", err);
         if (err.response?.status === 401) {
           localStorage.removeItem("token");
-          navigate("/login");
+          navigate("/auth/mypage");
         }
         setError("사용자 정보를 불러오는데 실패했습니다.");
       } finally {
@@ -102,10 +107,10 @@ const Mypage = () => {
                   <div className="p-2 bg-gradient-to-r from-blue-200 via-blue-100 to-white rounded-lg">
                     <FaUser className="text-blue-500" />
                   </div>
-                  <p className="text-gray-600 font-medium">이름</p>
+                  <p className="text-gray-600 font-medium">사용자 ID</p>
                 </div>
                 <p className="text-gray-900 font-medium pl-8">
-                  {userInfo.username}
+                  {userInfo.user_id}
                 </p>
               </div>
               {userInfo.created_at && (
