@@ -53,66 +53,82 @@ const Login = () => {
   };
 
   return (
-    <div className="flex flex-col justify-center items-center h-auto w-full mb-16">
-      <div className="logo w-[250px] md:w-[350px] mt-20 md:mt-32 mb-10 md:mb-12">
-        {/*<img src={AnifarmLogo} alt="Logo" /> */}
-      </div>
-      <div className="shadow-lg px-6 md:px-12 py-8 md:py-10 w-[90%] md:w-[500px] border mb-16 rounded-lg">
-        <h2 className="text-2xl md:text-3xl font-extrabold mb-4 md:mb-6 text-center">
-          로그인
-        </h2>
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-tr from-green-100 via-white to-white">
+      <div className="max-w-md w-full m-4 space-y-8 p-10 bg-white/80 backdrop-blur-sm rounded-2xl shadow-lg border border-gray-100 transition-all duration-300 hover:shadow-2xl">
+        <div>
+          <h2 className="mt-4 text-center text-3xl font-bold bg-gradient-to-r from-green-900 via-green-600 to-green-400 bg-clip-text text-transparent">
+            로그인
+          </h2>
+          <p className="mt-2 text-center text-base text-gray-900 font-medium">
+            계정에 로그인하세요
+          </p>
+        </div>
 
-        <form onSubmit={handleSubmit}>
-          <div className="mb-3">
-            <label
-              htmlFor="email"
-              className="block text-neutral-700 text-base md:text-lg mb-1"
-            >
-              이메일
-            </label>
-            <input
-              type="email"
-              placeholder="Email"
-              className="w-full px-3 py-2 border mb-2 rounded-md"
-              name="email"
-              onChange={handleChange}
-              id="emailInput"
-            />
+        <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
+          <div className="space-y-4">
+            <div>
+              <label
+                htmlFor="email"
+                className="block text-sm font-bold text-gray-700 mb-1"
+              >
+                이메일
+              </label>
+              <input
+                type="email"
+                placeholder="Email"
+                className="appearance-none relative block w-full px-4 py-3 border border-gray-100 placeholder-gray-500 text-gray-900 font-medium rounded-xl focus:outline-none focus:ring-1 focus:ring-green-500 focus:border-transparent transition-all duration-200 ease-in-out hover:border-green-200"
+                name="email"
+                onChange={handleChange}
+                id="emailInput"
+              />
+            </div>
+            <div>
+              <label
+                htmlFor="password"
+                className="block text-sm font-bold text-gray-700 mb-1"
+              >
+                비밀번호
+              </label>
+              <input
+                type="password"
+                placeholder="••••••••"
+                className="appearance-none relative block w-full px-4 py-3 border border-gray-100 placeholder-gray-500 text-gray-900 font-medium rounded-xl focus:outline-none focus:ring-1 focus:ring-green-500 focus:border-transparent transition-all duration-200 ease-in-out hover:border-green-200"
+                name="password"
+                onChange={handleChange}
+              />
+            </div>
           </div>
-          <div className="mb-2">
-            <label
-              htmlFor="password"
-              className="block text-neutral-700 text-base md:text-lg mb-1"
-            >
-              비밀번호
-            </label>
-            <input
-              type="password"
-              placeholder="Password"
-              className="w-full px-3 py-2 border rounded-md"
-              name="password"
-              onChange={handleChange}
-            />
-          </div>
-          <button className="btn w-full h-10 md:h-12" type="submit">
-            로그인 하기
-          </button>
-          <Link to="/register">
+
+          <div>
             <button
-              className="w-full h-10 md:h-12 border border-neutral-700 rounded-md hover:text-blue-600 hover:border-blue-600 transition-all duration-200"
-              to="/register"
+              type="submit"
+              className="w-full flex justify-center py-3 px-4 border border-transparent text-sm font-medium rounded-xl text-white bg-gradient-to-r from-green-900 via-green-600 to-green-400 hover:from-green-800 hover:via-green-500 hover:to-green-300 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 transition-all duration-200 ease-in-out transform hover:-translate-y-0.5"
             >
-              이메일 회원가입
+              로그인 하기
             </button>
-          </Link>
+            <Link to="/register">
+              <button
+                className="mt-3 w-full flex justify-center py-3 px-4 border border-gray-300 text-sm font-medium rounded-xl text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 transition-all duration-200 ease-in-out"
+                to="/register"
+              >
+                이메일 회원가입
+              </button>
+            </Link>
+          </div>
         </form>
 
-        <div className="mt-8 md:mt-10 mb-2 text-center text-gray-500">
-          <Link to="/findpwd" className="hover:text-black hover:underline">
+        <div className="text-center text-sm text-gray-600">
+          <Link
+            to="/findpwd"
+            className="hover:text-green-500 transition-colors duration-200"
+          >
             비밀번호 찾기
           </Link>
-          <span> &nbsp; | &nbsp; </span>
-          <Link to="/register" className="hover:text-black hover:underline">
+          <span className="mx-2">|</span>
+          <Link
+            to="/register"
+            className="hover:text-green-500 transition-colors duration-200"
+          >
             회원가입 하기
           </Link>
         </div>
