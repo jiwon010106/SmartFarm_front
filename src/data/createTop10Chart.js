@@ -77,7 +77,7 @@ export const createTop5Chart = (containerId, rawData) => {
   return Highcharts.chart(containerId, {
     chart: {
       type: "bar",
-      backgroundColor: "#00C092",
+      backgroundColor: "#C6CBC9",
       textColor: "white",
     },
     title: {
