@@ -1,10 +1,10 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import RaceChart from "./charts/RaceChart";
 import Top10Chart from "./charts/Top10Chart";
 // import market from "../../assets/images/free_icon_cart.png";
 
 const PricingInformation = () => {
-  const [activeChart, setActiveChart] = useState(null);
+  const [activeChart, setActiveChart] = useState("top10");
 
   const handleShowTop10Chart = () => {
     setActiveChart(activeChart === "top10" ? null : "top10");
@@ -27,14 +27,22 @@ const PricingInformation = () => {
       </p>
       <div className="flex gap-4 mt-8">
         <button
-          className="px-4 py-2 rounded-full bg-gray-100 hover:bg-gray-200"
+          className={`px-4 py-2 rounded-full ${
+            activeChart === "top10"
+              ? "bg-blue-500 text-white hover:bg-blue-600"
+              : "bg-gray-100 hover:bg-gray-200"
+          }`}
           onClick={handleShowTop10Chart}
         >
           판매 TOP 10
         </button>
 
         <button
-          className="px-4 py-2 rounded-full bg-gray-100 hover:bg-gray-200"
+          className={`px-4 py-2 rounded-full ${
+            activeChart === "race"
+              ? "bg-blue-500 text-white hover:bg-blue-600"
+              : "bg-gray-100 hover:bg-gray-200"
+          }`}
           onClick={handleShowRaceChart}
         >
           레이스 차트
