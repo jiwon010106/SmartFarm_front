@@ -151,127 +151,140 @@ const Register = () => {
 
   /* - 회원가입 처리: 폼 제출 시 호출되며, 입력값의 유효성을 검사하고, 이메일 인증이 완료되었는지 확인합니다. 모든 조건이 충족되면 서버에 회원가입 요청을 보냅니다. */
   return (
-    <div className="flex flex-col justify-center items-center h-auto mb-16">
-      <div className="logo w-[250px] md:w-[350px] mt-20 md:mt-32 mb-10 md:mb-12">
-        {/*<img src={AnifarmLogo} alt="logo" /> */}
-      </div>
-      <div className="shadow-lg px-6 md:px-12 py-8 md:py-10 w-[90%] md:w-[500px] border mb-16 rounded-lg">
-        <h2 className="text-2xl md:text-3xl font-bold mb-4 md:mb-6 text-center">
-          회원가입
-        </h2>
-        <form onSubmit={handleSubmit}>
-          <div className="mb-3"></div>
-          <div className="mb-5">
-            <label htmlFor="email" className="block text-neutral-700 text-lg">
-              이메일
-            </label>
-            <div className="flex items-center justify-center gap-1.5">
-              <input
-                type="email"
-                placeholder="Email"
-                className="w-[70%] px-3 py-2 border rounded-md"
-                name="email"
-                onChange={handleChange}
-              />
-              <button
-                onClick={handleSendVerification}
-                className="w-[30%] py-2 bg-green-400 text-white rounded-md text-[11px] md:text-[15px] hover:bg-green-500 transition-all duration-200 "
-                type="button"
-              >
-                인증코드 발송
-              </button>
-            </div>
-          </div>
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-tr from-green-100 via-white to-white">
+      <div className="max-w-md w-full m-4 space-y-8 p-10 bg-white/80 backdrop-blur-sm rounded-2xl shadow-lg border border-gray-100 transition-all duration-300 hover:shadow-2xl">
+        <div>
+          <h2 className="mt-4 text-center text-3xl font-bold bg-gradient-to-r from-green-900 via-green-600 to-green-400 bg-clip-text text-transparent">
+            회원가입
+          </h2>
+          <p className="mt-2 text-center text-base text-gray-900 font-medium">
+            계정을 생성하세요
+          </p>
+        </div>
 
-          {verificationCode && (
-            <div className="mb-4">
-              <label className="block text-neutral-700 text-lg mb-1">
-                이메일 확인
+        <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
+          <div className="space-y-4">
+            <div>
+              <label
+                htmlFor="email"
+                className="block text-sm font-bold text-gray-700 mb-1"
+              >
+                이메일
               </label>
-              <div className="flex gap-1.5">
+              <div className="flex gap-2">
                 <input
-                  type="text"
-                  placeholder="인증코드 입력"
-                  className="w-[70%] px-3 py-2 border rounded-md"
-                  value={userInputCode}
-                  onChange={(e) => setUserInputCode(e.target.value)}
+                  type="email"
+                  placeholder="Email"
+                  className="flex-1 appearance-none relative block px-4 py-3 border border-gray-100 placeholder-gray-500 text-gray-900 font-medium rounded-xl focus:outline-none focus:ring-1 focus:ring-green-500 focus:border-transparent transition-all duration-200 ease-in-out hover:border-green-200"
+                  name="email"
+                  onChange={handleChange}
                 />
                 <button
-                  onClick={handleVerifyCode}
-                  className="w-[30%] py-2 bg-green-600 text-white rounded-md hover:bg-green-700 transition-all duration-200 text-base"
+                  onClick={handleSendVerification}
                   type="button"
+                  className="px-4 py-3 bg-gradient-to-r from-green-600 to-green-400 text-white rounded-xl hover:from-green-700 hover:to-green-500 transition-all duration-200 text-sm font-medium focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500"
                 >
-                  확인
+                  인증코드 발송
                 </button>
               </div>
             </div>
-          )}
 
-          <div className="mb-2">
-            <label
-              htmlFor="password"
-              className="block text-neutral-700 text-lg mb-1"
-            >
-              비밀번호
-            </label>
-            <input
-              type="password"
-              placeholder="Password"
-              className="w-full px-3 py-2 border rounded-md mb-2"
-              name="password"
-              onChange={handleChange}
-            />
+            {verificationCode && (
+              <div>
+                <label className="block text-sm font-bold text-gray-700 mb-1">
+                  이메일 확인
+                </label>
+                <div className="flex gap-2">
+                  <input
+                    type="text"
+                    placeholder="인증코드 입력"
+                    className="flex-1 appearance-none relative block px-4 py-3 border border-gray-100 placeholder-gray-500 text-gray-900 font-medium rounded-xl focus:outline-none focus:ring-1 focus:ring-green-500 focus:border-transparent transition-all duration-200 ease-in-out hover:border-green-200"
+                    value={userInputCode}
+                    onChange={(e) => setUserInputCode(e.target.value)}
+                  />
+                  <button
+                    onClick={handleVerifyCode}
+                    type="button"
+                    className="px-6 py-3 bg-gradient-to-r from-green-700 to-green-500 text-white rounded-xl hover:from-green-800 hover:to-green-600 transition-all duration-200 text-sm font-medium focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500"
+                  >
+                    확인
+                  </button>
+                </div>
+              </div>
+            )}
+
+            <div>
+              <label
+                htmlFor="password"
+                className="block text-sm font-bold text-gray-700 mb-1"
+              >
+                비밀번호
+              </label>
+              <input
+                type="password"
+                placeholder="Password"
+                className="appearance-none relative block w-full px-4 py-3 border border-gray-100 placeholder-gray-500 text-gray-900 font-medium rounded-xl focus:outline-none focus:ring-1 focus:ring-green-500 focus:border-transparent transition-all duration-200 ease-in-out hover:border-green-200"
+                name="password"
+                onChange={handleChange}
+              />
+            </div>
+
+            <div>
+              <label
+                htmlFor="confirm_password"
+                className="block text-sm font-bold text-gray-700 mb-1"
+              >
+                비밀번호 확인
+              </label>
+              <input
+                type="password"
+                placeholder="Confirm Password"
+                className="appearance-none relative block w-full px-4 py-3 border border-gray-100 placeholder-gray-500 text-gray-900 font-medium rounded-xl focus:outline-none focus:ring-1 focus:ring-green-500 focus:border-transparent transition-all duration-200 ease-in-out hover:border-green-200"
+                name="confirm_password"
+                onChange={handleChange}
+              />
+            </div>
+
+            <div>
+              <label
+                htmlFor="birth_date"
+                className="block text-sm font-bold text-gray-700 mb-1"
+              >
+                생년월일
+              </label>
+              <input
+                type={`${
+                  window.innerWidth < 768
+                    ? value.birth_date
+                      ? "date"
+                      : "text"
+                    : "date"
+                }`}
+                className="appearance-none relative block w-full px-4 py-3 border border-gray-100 placeholder-gray-500 text-gray-900 font-medium rounded-xl focus:outline-none focus:ring-1 focus:ring-green-500 focus:border-transparent transition-all duration-200 ease-in-out hover:border-green-200"
+                name="birth_date"
+                onChange={handleChange}
+                max={getTodayDate()}
+                required
+                placeholder="YYYY-MM-DD"
+                onFocus={(e) => (e.target.type = "date")}
+                value={value.birth_date}
+              />
+            </div>
           </div>
-          <div className="mb-2">
-            <label
-              htmlFor="confirmPassword"
-              className="block text-neutral-700 text-lg mb-1"
-            >
-              비밀번호 확인
-            </label>
-            <input
-              type="password"
-              placeholder="Comfirm Password"
-              className="w-full px-3 py-2 border rounded-md mb-2"
-              name="confirm_password"
-              onChange={handleChange}
-            />
-          </div>
-          <div className="mb-2">
-            <label
-              htmlFor="birth_date"
-              className="block text-neutral-700 text-lg mb-1"
-            >
-              생년월일
-            </label>
-            <input
-              type={`${
-                window.innerWidth < 768
-                  ? value.birth_date
-                    ? "date"
-                    : "text"
-                  : "date"
-              }`}
-              className="w-full px-3 py-2 border rounded-md mb-6"
-              name="birth_date"
-              onChange={handleChange}
-              max={getTodayDate()}
-              required
-              placeholder="YYYY-MM-DD"
-              onFocus={(e) => (e.target.type = "date")}
-              value={value.birth_date}
-            />
-          </div>
-          <div className="flex justify-between items-center gap-2 mb-6">
+
+          <div className="flex gap-2">
             <button
-              className="w-full h-10 md:h-12 bg-green-600 text-white rounded-md hover:bg-green-700 hover:text-white transition-all duration-200 text-sm md:text-base"
               type="submit"
+              className="flex-1 py-3 bg-gradient-to-r from-green-900 via-green-600 to-green-400 text-white rounded-xl hover:from-green-800 hover:via-green-500 hover:to-green-300 transition-all duration-200 text-sm font-medium focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500"
             >
-              가입 하기
+              가입하기
             </button>
-            <Link to="/" className="w-full h-10 md:h-12">
-              <button className="w-full h-10 md:h-12 border border-neutral-700 rounded-md hover:text-green-600 hover:border-green-600 transition-all duration-200 text-sm md:text-base">
-                가입 취소
+            <Link to="/" className="flex-1">
+              <button
+                type="button"
+                className="w-full py-3 border border-gray-300 text-gray-700 rounded-xl hover:border-green-500 hover:text-green-500 transition-all duration-200 text-sm font-medium focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500"
+              >
+                취소
               </button>
             </Link>
           </div>
