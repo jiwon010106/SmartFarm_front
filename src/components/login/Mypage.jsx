@@ -107,10 +107,10 @@ const Mypage = () => {
                   <div className="p-2 bg-gradient-to-r from-blue-200 via-blue-100 to-white rounded-lg">
                     <FaUser className="text-blue-500" />
                   </div>
-                  <p className="text-gray-600 font-medium">사용자 ID</p>
+                  <p className="text-gray-600 font-medium">생년월일</p>
                 </div>
                 <p className="text-gray-900 font-medium pl-8">
-                  {userInfo.user_id}
+                  {userInfo.birth_date}
                 </p>
               </div>
               {userInfo.created_at && (
