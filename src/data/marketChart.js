@@ -33,7 +33,7 @@ import tomato1 from "../assets/images/tomatoes.jpg";
 export const createMarketChart = (rootElement, marketData) => {
   let period = "202401";
   let root = am5.Root.new(rootElement);
-  const stepDuration = 2000;
+  const stepDuration = 3000;
   let interval;
   let sortInterval;
 
@@ -103,19 +103,27 @@ export const createMarketChart = (rootElement, marketData) => {
       min: 200,
       strictMinMax: false,
       numberFormat: "#,###",
-      interpolationDuration: 1500,
+      interpolationDuration: stepDuration / 2,
       interpolationEasing: am5.ease.cubic,
       renderer: am5xy.AxisRendererX.new(root, {
-        visible: true,
+        visible: false,
         minGridDistance: 100,
         cellStartLocation: 0.1,
         cellEndLocation: 0.9,
+        labels: {
+          visible: false,
+        },
+        grid: {
+          visible: false,
+        },
+        ticks: {
+          visible: false,
+        },
       }),
     })
   );
 
-  xAxis.set("interpolationDuration", stepDuration / 10);
-  xAxis.set("interpolationEasing", am5.ease.linear);
+  xAxis.get("renderer").labels.template.set("forceHidden", true);
 
   let series = chart.series.push(
     am5xy.ColumnSeries.new(root, {
@@ -293,7 +301,7 @@ export const createMarketChart = (rootElement, marketData) => {
 
   sortInterval = setInterval(function () {
     sortCategoryAxis();
-  }, 100);
+  }, 150);
 
   function setInitialData() {
     if (marketData && marketData[period]) {
