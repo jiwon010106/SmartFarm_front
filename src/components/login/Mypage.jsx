@@ -110,7 +110,16 @@ const Mypage = () => {
                   <p className="text-gray-600 font-medium">생년월일</p>
                 </div>
                 <p className="text-gray-900 font-medium pl-8">
-                  {userInfo.birth_date}
+                  {userInfo.birth_date
+                    ? new Date(userInfo.birth_date)
+                        .toLocaleDateString("ko-KR", {
+                          year: "numeric",
+                          month: "2-digit",
+                          day: "2-digit",
+                        })
+                        .replace(/\. /g, "-")
+                        .replace(".", "")
+                    : "정보 없음"}
                 </p>
               </div>
               {userInfo.created_at && (
