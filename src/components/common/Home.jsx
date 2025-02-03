@@ -25,16 +25,6 @@ const Home = () => {
     }
   }, [top5Data]);
 
-  if (loading) {
-    console.log("데이터 로딩 중...");
-    return <div>로딩 중...</div>;
-  }
-
-  if (!top5Data) {
-    // console.log("데이터가 없습니다.");
-    return <div>데이터를 불러오는 중...</div>;
-  }
-
   return (
     <div className="container">
       <h1> Welcome to the Home Page </h1>
