@@ -29,18 +29,20 @@ const Header = () => {
                   <li className="text-neutral-500 hover:text-black transition-all duration-100">
                     <button onClick={handleLogout}>로그아웃</button>
                   </li>
+                  <li className="text-neutral-500 hover:text-black transition-all duration-100">
+                    <Link to="/mypage">마이페이지</Link>
+                  </li>
                 </>
               ) : (
-                <li className="text-neutral-500 hover:text-black transition-all duration-100">
-                  <Link to="/login">로그인</Link>
-                </li>
+                <>
+                  <li className="text-neutral-500 hover:text-black transition-all duration-100">
+                    <Link to="/login">로그인</Link>
+                  </li>
+                  <li className="text-neutral-500 hover:text-black transition-all duration-100">
+                    <Link to="/register">회원가입</Link>
+                  </li>
+                </>
               )}
-              <li className="text-neutral-500 hover:text-black transition-all duration-100">
-                <Link to="/register">회원가입</Link>
-              </li>
-              <li className="text-neutral-500 hover:text-black transition-all duration-100">
-                <Link to="/mypage">마이페이지</Link>
-              </li>
             </ul>
           </div>
         </div>
