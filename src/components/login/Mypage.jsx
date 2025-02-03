@@ -7,7 +7,7 @@ import { POST_MYPAGE_API_URL } from "../../utils/apiurl";
 
 const Mypage = () => {
   const navigate = useNavigate();
-  const isLoggedIn = useSelector((state) => state.auth.isLoggedIn);
+  const user = useSelector((state) => state.login.user);
   const [userInfo, setUserInfo] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -15,6 +15,12 @@ const Mypage = () => {
   const [isModalOpen] = useState(false);
 
   useEffect(() => {
+    // 로그인 상태 체크
+    if (!user) {
+      navigate("/login");
+      return;
+    }
+
     const handleResize = () => {
       setWindowWidth(window.innerWidth);
     };
@@ -22,14 +28,15 @@ const Mypage = () => {
     return () => {
       window.removeEventListener("resize", handleResize);
     };
-  }, []);
+  }, [user, navigate]);
 
   useEffect(() => {
     const token = localStorage.getItem("token");
-    if (!isLoggedIn && !token) {
+    if (!token) {
       navigate("/login");
       return;
     }
+
     const fetchUserInfo = async () => {
       try {
         const response = await axios.get(POST_MYPAGE_API_URL, {
@@ -38,19 +45,20 @@ const Mypage = () => {
           },
         });
         setUserInfo(response.data);
+        setLoading(false);
       } catch (err) {
         console.error("사용자 정보 로드 에러:", err);
         if (err.response?.status === 401) {
           localStorage.removeItem("token");
-          navigate("/auth/mypage");
+          navigate("/login");
         }
         setError("사용자 정보를 불러오는데 실패했습니다.");
-      } finally {
         setLoading(false);
       }
     };
+
     fetchUserInfo();
-  }, [isLoggedIn, navigate]);
+  }, [navigate]);
 
   if (loading) {
     return (
@@ -59,6 +67,7 @@ const Mypage = () => {
       </div>
     );
   }
+
   if (error) {
     return (
       <div className="flex justify-center items-center min-h-screen pt-16">
@@ -68,6 +77,7 @@ const Mypage = () => {
       </div>
     );
   }
+
   return (
     <div
       className={`min-h-[calc(100vh-64px)] w-full bg-gradient-to-tr from-blue-100 via-white to-white mt-16 ${
@@ -75,7 +85,6 @@ const Mypage = () => {
       }`}
     >
       <div className="flex w-full p-4 gap-4">
-        {/* 사이드바 */}
         <div
           className={`w-80 bg-white/80 backdrop-blur-sm rounded-2xl shadow-lg border border-gray-100 p-8 transition-all duration-300 hover:shadow-xl ${
             windowWidth <= 800 ? "hidden" : ""
