@@ -35,7 +35,7 @@ const Footer = () => {
         </div>
 
         {/* 버튼 추가 */}
-        <div className="py-2 md:py-4">
+        <div className="py-2 md:py-4 hover:text-green-500">
           <button onClick={navigateToTest1} className="mr-2">
             Test1
           </button>
