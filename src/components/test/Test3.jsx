@@ -12,6 +12,14 @@ const Test3 = () => {
     'https://images.unsplash.com/photo-1543357530-d91dab30fa97?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxzZWFyY2h8OTN8fHBvcnRyYWl0fGVufDB8fDB8fA%3D%3D&auto=format&fit=crop&w=800&q=60'
   ];
 
+  useEffect(() => {
+    // 이미지 미리 로드
+    images.forEach(src => {
+      const img = new Image();
+      img.src = src;
+    });
+  }, []);
+
   const handleClick = (index) => {
     setActiveIndex(activeIndex === index ? null : index);
   };
@@ -19,13 +27,25 @@ const Test3 = () => {
   useEffect(() => {
     const items = document.querySelectorAll('.accordion-item');
     
+    const timeline = gsap.timeline();
+    
     items.forEach((item, i) => {
-      gsap.to(item, {
+      timeline.to(item, {
         width: activeIndex === i ? '42vw' : (activeIndex === null ? '15vw' : '8vw'),
-        duration: activeIndex === i ? 2.5 : 2,
-        ease: activeIndex === i ? 'elastic(1, .3)' : 'elastic(1, .6)'
-      });
+        duration: 1.5,
+        ease: 'power4.out',
+      }, 0); // 모든 애니메이션을 동시에 시작
     });
+
+    // 활성화된 아이템에 대한 추가 스타일 애니메이션
+    if (activeIndex !== null) {
+      timeline.to(items[activeIndex], {
+        backgroundPosition: 'center',
+        backgroundSize: 'cover',
+        duration: 0.5,
+        ease: 'power2.out',
+      }, 0);
+    }
   }, [activeIndex]);
 
   return (
@@ -34,11 +54,14 @@ const Test3 = () => {
         {images.map((image, index) => (
           <div
             key={index}
-            className={`accordion-item inline-block cursor-pointer rounded-[3vw] h-[75vh] mx-[1vw] bg-center bg-cover transition-all duration-500`}
+            className={`accordion-item inline-block cursor-pointer rounded-[3vw] h-[75vh] mx-[1vw] bg-center bg-cover transition-transform duration-300 ease-out
+              ${activeIndex === index ? 'z-10' : 'z-0'}
+              hover:shadow-xl`}
             style={{
               backgroundImage: `url(${image})`,
               width: '15vw',
-              backgroundSize: '75vh'
+              backgroundSize: '75vh',
+              transform: `translateZ(0)`, // 하드웨어 가속 활성화
             }}
             onClick={() => handleClick(index)}
           />
