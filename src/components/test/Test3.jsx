@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { gsap } from 'gsap';
 
 const Test3 = () => {
-  const [activeIndex, setActiveIndex] = useState(null);
+  const [activeIndex, setActiveIndex] = useState(0);
 
   const images = [
     'https://images.unsplash.com/photo-1534528741775-53994a69daeb?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxzZWFyY2h8Mnx8cG9ydHJhaXR8ZW58MHx8MHx8&auto=format&fit=crop&w=800&q=60',
@@ -18,6 +18,25 @@ const Test3 = () => {
       const img = new Image();
       img.src = src;
     });
+
+    // 컴포넌트 마운트 시 첫 번째 이미지에 대한 애니메이션 실행
+    const items = document.querySelectorAll('.accordion-item');
+    const timeline = gsap.timeline();
+    
+    items.forEach((item, i) => {
+      timeline.to(item, {
+        width: i === 0 ? '42vw' : '8vw',
+        duration: 1.5,
+        ease: 'power4.out',
+      }, 0);
+    });
+
+    timeline.to(items[0], {
+      backgroundPosition: 'center',
+      backgroundSize: 'cover',
+      duration: 0.5,
+      ease: 'power2.out',
+    }, 0);
   }, []);
 
   const handleClick = (index) => {
@@ -34,10 +53,9 @@ const Test3 = () => {
         width: activeIndex === i ? '42vw' : (activeIndex === null ? '15vw' : '8vw'),
         duration: 1.5,
         ease: 'power4.out',
-      }, 0); // 모든 애니메이션을 동시에 시작
+      }, 0);
     });
 
-    // 활성화된 아이템에 대한 추가 스타일 애니메이션
     if (activeIndex !== null) {
       timeline.to(items[activeIndex], {
         backgroundPosition: 'center',
@@ -59,9 +77,9 @@ const Test3 = () => {
               hover:shadow-xl`}
             style={{
               backgroundImage: `url(${image})`,
-              width: '15vw',
+              width: index === 0 ? '42vw' : '8vw', // 초기 상태 설정
               backgroundSize: '75vh',
-              transform: `translateZ(0)`, // 하드웨어 가속 활성화
+              transform: `translateZ(0)`,
             }}
             onClick={() => handleClick(index)}
           />
