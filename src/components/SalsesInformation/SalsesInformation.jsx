@@ -1,7 +1,7 @@
 import React from "react";
 
 const SalsesInformation = () => {
-  return <div>판매정보</div>;
+  return <div>가격예측</div>;
 };
 
 export default SalsesInformation;
