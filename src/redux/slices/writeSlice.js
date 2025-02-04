@@ -19,7 +19,7 @@ const writeSlice = createSlice({
     // 게시글 작성 성공
     createPostSuccess: (state, action) => {
       state.loading = false;
-      state.posts.push(action.payload);
+      state.posts = [action.payload, ...state.posts];
       state.error = null;
     },
     // 게시글 작성 실패
@@ -86,12 +86,12 @@ const writeSlice = createSlice({
 
 // 액션 생성자들을 내보냅니다
 export const {
-  createPostStart,
-  createPostSuccess,
-  createPostFailure,
   getPostsStart,
   getPostsSuccess,
   getPostsFailure,
+  createPostStart,
+  createPostSuccess,
+  createPostFailure,
   getPostStart,
   getPostSuccess,
   getPostFailure,

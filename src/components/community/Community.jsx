@@ -9,7 +9,7 @@ import {
   selectLoading,
 } from "../../redux/slices/writeSlice";
 import Write from "./Write";
-import CreatePostModal from "./CreatePostModal";
+import CreatePostModal from "./WriteModal";
 import { getRequest } from "../../utils/requestMethods";
 
 const Community = () => {
@@ -18,22 +18,27 @@ const Community = () => {
   const loading = useSelector(selectLoading);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
+  const fetchPosts = async () => {
+    dispatch(getPostsStart());
+    try {
+      const response = await getRequest("http://localhost:8000/api/write");
+      dispatch(getPostsSuccess(response.data));
+    } catch (err) {
+      console.error("Error fetching posts:", err);
+      dispatch(getPostsFailure(err.message || "게시글 로딩 실패"));
+    }
+  };
+
   // 컴포넌트 마운트 시 게시글 목록 불러오기
   useEffect(() => {
-    const fetchPosts = async () => {
-      dispatch(getPostsStart());
-      try {
-        const response = await getRequest("http://localhost:8000/api/write");
-        console.log("Fetched posts:", response); // 데이터 확인용
-        dispatch(getPostsSuccess(response.data));
-      } catch (err) {
-        console.error("Error fetching posts:", err);
-        dispatch(getPostsFailure(err.message || "게시글 로딩 실패"));
-      }
-    };
-
     fetchPosts();
   }, [dispatch]);
+
+  // 모달 닫을 때 게시글 목록 새로고침
+  const handleModalClose = () => {
+    setIsModalOpen(false);
+    fetchPosts(); // 모달이 닫힐 때 게시글 목록 새로고침
+  };
 
   return (
     <div className="max-w-6xl mx-auto p-5">
@@ -77,10 +82,7 @@ const Community = () => {
       <Write />
 
       {/* 새 게시글 작성 모달 */}
-      <CreatePostModal
-        isOpen={isModalOpen}
-        onClose={() => setIsModalOpen(false)}
-      />
+      <CreatePostModal isOpen={isModalOpen} onClose={handleModalClose} />
     </div>
   );
 };
