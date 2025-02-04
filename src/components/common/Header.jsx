@@ -2,7 +2,7 @@ import React from "react";
 import { Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { clearToken } from "../../redux/slices/loginslice";
-import AnifarmLogo from "../../assets/smartfarm.png";
+import AnifarmLogo from "../../assets/main/aniform.png";
 
 const Header = () => {
   const dispatch = useDispatch();
