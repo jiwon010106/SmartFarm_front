@@ -28,7 +28,7 @@ const Home = () => {
   return (
     <div className="container">
       <img src={landingImg} alt="" className="w-full" />
-      <div className="flex justify-center items-center gap-10">
+      <div className="flex justify-center items-center gap-40 m-[50px] hover:text-green-500">
         <Link to="/pricingInformation">소비 트랜드</Link>
         <Link to="/sellInformation">가격예측</Link>
         <Link to="/pests">육성법</Link>
