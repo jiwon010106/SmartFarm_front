@@ -30,6 +30,8 @@ const Home = () => {
       <img src={landingImg} alt="" className="w-full" />
       <div className="flex justify-center items-center gap-10">
         <Link to="/pricingInformation">소비 트랜드</Link>
+        <Link to="/sellInformation">판매정보</Link>
+        <Link to="/pests">육성법</Link>
         <Link to="/Community">게시글 작성</Link>
       </div>
       <div className="w-[500px] h-[420px] text-white rounded-lg p-4">
