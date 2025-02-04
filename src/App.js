@@ -13,7 +13,7 @@ import PricingInformation from "./components/PricingInformation/PricingInformati
 import Test1 from "./components/test/Test1";
 import Test2 from "./components/test/Test2";
 import Test3 from "./components/test/Test3";
-
+import Community from "./components/community/Community";
 
 function App() {
   return (
@@ -28,6 +28,7 @@ function App() {
               path="/pricingInformation"
               element={<PricingInformation />}
             />
+            <Route path="/Community" element={<Community />} />
             <Route path="/register" element={<Register />} />
             <Route path="/login" element={<Login />} />
             <Route path="/mypage" element={<Mypage />} />
