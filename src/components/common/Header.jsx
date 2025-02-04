@@ -14,7 +14,7 @@ const Header = () => {
   };
 
   return (
-    <div className="w-full flex justify-center shadow-custom sticky top-0 z-50 bg-gray-100">
+    <div className="w-full flex justify-center shadow-custom sticky top-0 z-50">
       <div className="container p-1 flex justify-between items-center relative">
         <div className="logo left-0">
           <Link to="/">

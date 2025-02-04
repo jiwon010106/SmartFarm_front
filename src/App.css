@@ -36,3 +36,9 @@
     transform: rotate(360deg);
   }
 }
+
+* {
+  font-family: "Gowun Dodum", serif;
+  font-weight: 400;
+  font-style: normal;
+}
