@@ -1,5 +1,30 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import { 
+  WiDaySunny,      // 맑은 날
+  WiNightClear,    // 맑은 밤
+  WiDayCloudy,     // 구름 조금 (낮)
+  WiNightAltCloudy,// 구름 조금 (밤)
+  WiCloud,         // 구름 많음
+  WiCloudy,        // 흐림
+  WiRain,          // 비
+  WiDayRain,       // 낮 비
+  WiNightRain,     // 밤 비
+  WiThunderstorm,  // 천둥번개
+  WiSnow,          // 눈
+  WiFog            // 안개
+} from 'react-icons/wi';
+import { 
+  BsSun,          // 맑은 날
+  BsCloudSun,     // 구름 조금
+  BsCloud,        // 구름 많음
+  BsClouds,       // 흐림
+  BsCloudRain,    // 소나기
+  BsCloudRainHeavy, // 비
+  BsCloudLightningRain, // 천둥번개
+  BsSnow,         // 눈
+  BsCloudFog      // 안개
+} from 'react-icons/bs';
 
 const Weather = () => {
   const [weatherData, setWeatherData] = useState(null);
@@ -64,6 +89,42 @@ const Weather = () => {
     return () => clearTimeout(timer);
   }, []);
 
+  const getWeatherIcon = (iconCode) => {
+    // 밤 아이콘 코드를 낮 아이콘 코드로 변환
+    const dayIcon = iconCode.replace('n', 'd');
+    
+    const iconMap = {
+      // 맑은 날
+      '01d': <BsSun className="w-10 h-10 text-yellow-400" />,
+      
+      // 구름 조금
+      '02d': <BsCloudSun className="w-10 h-10 text-blue-400" />,
+      
+      // 구름 많음
+      '03d': <BsCloud className="w-10 h-10 text-gray-500" />,
+      
+      // 흐림
+      '04d': <BsClouds className="w-10 h-10 text-gray-600" />,
+      
+      // 소나기
+      '09d': <BsCloudRain className="w-10 h-10 text-blue-500" />,
+      
+      // 비
+      '10d': <BsCloudRainHeavy className="w-10 h-10 text-blue-600" />,
+      
+      // 천둥번개
+      '11d': <BsCloudLightningRain className="w-10 h-10 text-yellow-500" />,
+      
+      // 눈
+      '13d': <BsSnow className="w-10 h-10 text-blue-200" />,
+      
+      // 안개
+      '50d': <BsCloudFog className="w-10 h-10 text-gray-400" />
+    };
+    
+    return iconMap[dayIcon] || <BsSun className="w-10 h-10 text-yellow-400" />;
+  };
+
   if (loading) return <div>로딩중...</div>;
   if (error) return <div>에러: {error}</div>;
   if (!weatherData) return <div>데이터가 없습니다.</div>;
@@ -107,19 +168,15 @@ const Weather = () => {
 
         {/* 주간 날씨 */}
         <div className="grid grid-cols-6 gap-2">
-          {weatherData.map((day, index) => {
+          {weatherData.slice(0, 6).map((day, index) => {
             const date = new Date(day.dt * 1000);
             const weekday = new Intl.DateTimeFormat('ko-KR', { weekday: 'short' }).format(date);
             return (
               <div key={index} className="text-center p-2">
                 <div className="font-medium">{weekday}</div>
                 <div className="text-sm text-gray-500">{date.getMonth() + 1}.{date.getDate()}.</div>
-                <div className="my-2">
-                  <img 
-                    src={`http://openweathermap.org/img/wn/${day.weather[0].icon}@2x.png`}
-                    alt={day.weather[0].description}
-                    className="w-8 h-8 mx-auto"
-                  />
+                <div className="flex justify-center items-center my-2">
+                  {getWeatherIcon(day.weather[0].icon)}
                 </div>
                 <div className="flex justify-center gap-2 text-sm">
                   <span className="text-blue-500">{Math.round(day.main.temp_min)}°</span>
