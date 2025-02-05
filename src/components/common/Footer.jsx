@@ -1,5 +1,5 @@
 import React from "react";
-import AnifarmLogo from "../../assets/smartfarm.png";
+import AnifarmLogo from "../../assets/main/aniform.png";
 
 const Footer = () => {
   const navigateToTest1 = () => {
@@ -8,6 +8,10 @@ const Footer = () => {
 
   const navigateToTest2 = () => {
     window.location.href = "/test2";
+  };
+
+  const navigateToTest3 = () => {
+    window.location.href = "/test3";
   };
 
   return (
@@ -31,11 +35,14 @@ const Footer = () => {
         </div>
 
         {/* 버튼 추가 */}
-        <div className="py-2 md:py-4">
+        <div className="py-2 md:py-4 hover:text-green-500">
           <button onClick={navigateToTest1} className="mr-2">
             Test1
           </button>
-          <button onClick={navigateToTest2}>Test2</button>
+          <button onClick={navigateToTest2} className="mr-2">
+            Test2
+          </button>
+          <button onClick={navigateToTest3}>Test3</button>
         </div>
 
         {/* 구분선 */}

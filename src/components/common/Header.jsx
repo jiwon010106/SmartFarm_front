@@ -2,7 +2,7 @@ import React from "react";
 import { Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { clearToken } from "../../redux/slices/loginslice";
-import AnifarmLogo from "../../assets/smartfarm.png";
+import AnifarmLogo from "../../assets/main/aniform.png";
 
 const Header = () => {
   const dispatch = useDispatch();
@@ -14,7 +14,7 @@ const Header = () => {
   };
 
   return (
-    <div className="w-full flex justify-center shadow-custom sticky top-0 z-50 bg-gray-100">
+    <div className="w-full flex justify-center shadow-custom sticky top-0 z-50">
       <div className="container p-1 flex justify-between items-center relative">
         <div className="logo left-0">
           <Link to="/">

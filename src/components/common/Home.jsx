@@ -9,7 +9,6 @@ const Home = () => {
   const chartRef = useRef(null);
   const dispatch = useDispatch();
   const top5Data = useSelector((state) => state.apis.getTop5Data);
-  const loading = useSelector((state) => state.apis.loading);
 
   useEffect(() => {
     dispatch(fetchGetTop5Data());
@@ -26,17 +25,8 @@ const Home = () => {
     }
   }, [top5Data]);
 
-  if (loading) {
-    console.log("데이터 로딩 중...");
-    return <div>로딩 중...</div>;
-  }
-
-  if (!top5Data) {
-    // console.log("데이터가 없습니다.");
-    return <div>데이터를 불러오는 중...</div>;
-  }
-
   return (
+<<<<<<< HEAD
     <div className="w-full">
       <div className="relative">
         <div className="overflow-hidden flex justify-center items-center relative max-h-[600px] min-h-[300px]">
@@ -71,6 +61,19 @@ const Home = () => {
             <div id="top5-chart" ref={chartRef} />
           </div>
         </div>
+=======
+    <div className="container">
+      <img src={landingImg} alt="" className="w-full" />
+      <div className="flex justify-center items-center gap-40 m-[50px] hover:text-green-500">
+        <Link to="/pricingInformation">소비 트랜드</Link>
+        <Link to="/sellInformation">가격예측</Link>
+        <Link to="/pests">육성법</Link>
+        <Link to="/trainingMethod">작물육성방법</Link>
+        <Link to="/Community">게시글 작성</Link>
+      </div>
+      <div className="w-[500px] h-[420px] text-white rounded-lg p-4">
+        <div id="top5-chart" ref={chartRef} />
+>>>>>>> 25e154ada14d0ed49b54fb9d784af78355bacb1f
       </div>
     </div>
   );

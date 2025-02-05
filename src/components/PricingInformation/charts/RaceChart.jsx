@@ -107,7 +107,7 @@ const RaceChart = () => {
   return (
     <div
       id="chartdiv"
-      className="w-full h-[500px] mt-5 mb-10 border-2 border-gray-300 rounded-lg"
+      className="w-full h-[600px] mt-5 mb-10 border-2 border-gray-300 rounded-lg"
     ></div>
   );
 };

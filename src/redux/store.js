@@ -4,12 +4,14 @@ import { combineReducers, configureStore } from "@reduxjs/toolkit";
 import authReducer from "./slices/authslice";
 import loginReducer from "./slices/loginslice";
 import apiReducer from "./slices/apiSlice";
+import writeReducer from "./slices/writeSlice";
 
 const store = configureStore({
   reducer: combineReducers({
     auth: authReducer, // 값은 만드는 이름
     login: loginReducer,
     apis: apiReducer,
+    write: writeReducer,
   }),
 });
 
