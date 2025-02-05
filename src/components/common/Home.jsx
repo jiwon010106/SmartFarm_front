@@ -26,17 +26,11 @@ const Home = () => {
   }, [top5Data]);
 
   return (
-<<<<<<< HEAD
-    <div className="w-full">
+    <div className="container">
       <div className="relative">
         <div className="overflow-hidden flex justify-center items-center relative max-h-[600px] min-h-[300px]">
           <div className="absolute opacity-30 overlay w-full h-full bg-white left-0 top-0"></div>
-          <div
-            className="slogan-box absolute 
-          left-1/2 transform -translate-x-1/2 
-          lg:left-[20%] lg:transform-none 
-          top-[25%] flex flex-col gap-4"
-          >
+          <div className="slogan-box absolute left-1/2 transform -translate-x-1/2 lg:left-[20%] lg:transform-none top-[25%] flex flex-col gap-4">
             <h2
               style={{ fontFamily: "LemonMilk" }}
               className="text-6xl hidden lg:block"
@@ -55,15 +49,9 @@ const Home = () => {
             className="w-full max-h-[600px] min-h-[300px]"
             alt=""
           />
-          <h1> Welcome to the Home Page </h1>
-          <Link to="/pricingInformation">Go to Pricing Information</Link>
-          <div className="w-[500px] h-[420px] text-white rounded-lg p-4">
-            <div id="top5-chart" ref={chartRef} />
-          </div>
         </div>
-=======
-    <div className="container">
-      <img src={landingImg} alt="" className="w-full" />
+      </div>
+
       <div className="flex justify-center items-center gap-40 m-[50px] hover:text-green-500">
         <Link to="/pricingInformation">소비 트랜드</Link>
         <Link to="/sellInformation">가격예측</Link>
@@ -71,9 +59,9 @@ const Home = () => {
         <Link to="/trainingMethod">작물육성방법</Link>
         <Link to="/Community">게시글 작성</Link>
       </div>
+
       <div className="w-[500px] h-[420px] text-white rounded-lg p-4">
         <div id="top5-chart" ref={chartRef} />
->>>>>>> 25e154ada14d0ed49b54fb9d784af78355bacb1f
       </div>
     </div>
   );
