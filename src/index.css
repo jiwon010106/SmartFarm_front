@@ -30,3 +30,75 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
+
+/* Sweetalert2 커스텀 스타일 */
+.swal2-popup {
+  font-family: "Noto Sans KR", sans-serif;
+  border-radius: 15px;
+  background-color: #ffffff;
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+}
+
+.swal2-title {
+  color: #333333;
+  font-size: 1.5em;
+  font-weight: 600;
+}
+
+.swal2-html-container {
+  color: #666666;
+  font-size: 1.1em;
+}
+
+.swal2-confirm {
+  background-color: #4caf50 !important;
+  border-radius: 8px !important;
+  font-weight: 500 !important;
+  padding: 10px 24px !important;
+}
+
+.swal2-cancel {
+  background-color: #f44336 !important;
+  border-radius: 8px !important;
+  font-weight: 500 !important;
+  padding: 10px 24px !important;
+}
+
+.swal2-toast {
+  background-color: #ffffff;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+/* 애니메이션 효과 */
+.swal2-show {
+  animation: swal2-show 0.3s;
+}
+
+.swal2-hide {
+  animation: swal2-hide 0.15s forwards;
+}
+
+/* 아이콘 색상 */
+.swal2-success-ring {
+  border-color: #4caf50 !important;
+}
+
+.swal2-icon.swal2-success {
+  border-color: #4caf50 !important;
+  color: #4caf50 !important;
+}
+
+.swal2-icon.swal2-error {
+  border-color: #f44336 !important;
+  color: #f44336 !important;
+}
+
+.swal2-icon.swal2-warning {
+  border-color: #ff9800 !important;
+  color: #ff9800 !important;
+}
+
+.swal2-icon.swal2-info {
+  border-color: #2196f3 !important;
+  color: #2196f3 !important;
+}

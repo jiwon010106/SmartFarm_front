@@ -1,16 +1,40 @@
 import React from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { clearToken } from "../../redux/slices/loginslice";
 import AnifarmLogo from "../../assets/main/aniform.png";
+import Swal from "sweetalert2";
 
 const Header = () => {
   const dispatch = useDispatch();
   const user = useSelector((state) => state.login.user);
+  const navigate = useNavigate();
 
   const handleLogout = () => {
-    dispatch(clearToken());
-    alert("로그아웃 되었습니다.");
+    Swal.fire({
+      title: "로그아웃",
+      text: "정말 로그아웃 하시겠습니까?",
+      icon: "question",
+      showCancelButton: true,
+      confirmButtonText: "확인",
+      cancelButtonText: "취소",
+    }).then((result) => {
+      if (result.isConfirmed) {
+        localStorage.removeItem("token");
+        localStorage.removeItem("user");
+        dispatch(clearToken());
+
+        Swal.fire({
+          title: "로그아웃 완료",
+          text: "로그아웃 되었습니다.",
+          icon: "success",
+          timer: 1500,
+          showConfirmButton: false,
+        });
+
+        navigate("/");
+      }
+    });
   };
 
   return (

@@ -10,6 +10,7 @@ import {
   putRequest,
   deleteRequest,
 } from "../../utils/requestMethods";
+import Swal from "sweetalert2";
 
 const CreatePostModal = ({
   isOpen,
@@ -56,7 +57,18 @@ const CreatePostModal = ({
   );
 
   const handleDelete = async () => {
-    if (window.confirm("정말 삭제하시겠습니까?")) {
+    const result = await Swal.fire({
+      title: "정말 삭제하시겠습니까?",
+      text: "이 작업은 되돌릴 수 없습니다!",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#d33",
+      cancelButtonColor: "#3085d6",
+      confirmButtonText: "삭제",
+      cancelButtonText: "취소",
+    });
+
+    if (result.isConfirmed) {
       try {
         const response = await fetch(
           `http://localhost:8000/api/write/${post.post_id}`,
@@ -76,13 +88,23 @@ const CreatePostModal = ({
           );
         }
 
+        await Swal.fire({
+          title: "삭제 완료!",
+          text: "게시글이 성공적으로 삭제되었습니다.",
+          icon: "success",
+        });
+
         onClose();
         if (onPostDeleted) {
           onPostDeleted(post.post_id);
         }
       } catch (error) {
         console.error("게시글 삭제 실패:", error);
-        alert(`게시글 삭제에 실패했습니다. ${error.message}`);
+        await Swal.fire({
+          title: "오류",
+          text: `게시글 삭제에 실패했습니다. ${error.message}`,
+          icon: "error",
+        });
       }
     }
   };
@@ -107,6 +129,11 @@ const CreatePostModal = ({
         if (response.status === 201) {
           dispatch(createPostSuccess(response.data));
           setPostData({ title: "", content: "", category: "general" });
+          await Swal.fire({
+            title: "성공!",
+            text: "게시글이 성공적으로 작성되었습니다.",
+            icon: "success",
+          });
           onClose();
         } else {
           throw new Error("게시글 작성에 실패했습니다.");
@@ -116,6 +143,11 @@ const CreatePostModal = ({
         dispatch(
           createPostFailure(error.message || "게시글 작성에 실패했습니다.")
         );
+        await Swal.fire({
+          title: "오류",
+          text: "게시글 작성에 실패했습니다.",
+          icon: "error",
+        });
       }
     } else if (mode === "edit") {
       try {
@@ -127,11 +159,20 @@ const CreatePostModal = ({
           },
           body: JSON.stringify(postData),
         });
+        await Swal.fire({
+          title: "성공!",
+          text: "게시글이 성공적으로 수정되었습니다.",
+          icon: "success",
+        });
         onClose();
         window.location.reload();
       } catch (error) {
         console.error("게시글 수정 실패:", error);
-        alert("게시글 수정에 실패했습니다.");
+        await Swal.fire({
+          title: "오류",
+          text: "게시글 수정에 실패했습니다.",
+          icon: "error",
+        });
       }
     }
   };

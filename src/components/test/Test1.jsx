@@ -38,13 +38,13 @@ const Weather = () => {
           "http://localhost:8000/weather?city=Seoul"
         );
         if (response.data.list) {
-          // 현재 날짜부터 6일치 데이터 생성
           const dailyData = [];
           const today = new Date();
 
           for (let i = 0; i < 6; i++) {
             const date = new Date(today);
             date.setDate(today.getDate() + i);
+<<<<<<< HEAD
 
             // API에서 받은 데이터에서 해당 날짜의 데이터를 찾거나, 없으면 기본값 생성
             const dayData = response.data.list.find((item) => {
@@ -68,7 +68,63 @@ const Weather = () => {
             dailyData.push({
               ...dayData,
               dt: date.getTime() / 1000, // 날짜 덮어쓰기
+=======
+            
+            const dayData = response.data.list.filter(item => {
+              const itemDate = new Date(item.dt * 1000);
+              return itemDate.getDate() === date.getDate();
+>>>>>>> 5dae32bb8f37fc709e8be8bf16b5b3c563d53559
             });
+
+            if (dayData.length > 0) {
+              let maxTemp = -Infinity;
+              let minTemp = Infinity;
+              let sumTemp = 0;
+              let totalRain = 0;
+              let maxPop = 0;
+
+              dayData.forEach(data => {
+                maxTemp = Math.max(maxTemp, data.main.temp);
+                minTemp = Math.min(minTemp, data.main.temp);
+                sumTemp += data.main.temp;
+                // 강수량 누적
+                if (data.rain && data.rain['3h']) {
+                  totalRain += data.rain['3h'];
+                }
+                // 최대 강수확률 계산
+                if (data.pop) {
+                  maxPop = Math.max(maxPop, data.pop);
+                }
+              });
+
+              dailyData.push({
+                dt: date.getTime() / 1000,
+                main: {
+                  temp_max: maxTemp,
+                  temp_min: minTemp,
+                  temp: sumTemp / dayData.length,
+                  humidity: dayData[0].main.humidity
+                },
+                weather: dayData[0].weather,
+                rain: totalRain, // 일일 총 강수량
+                pop: Math.round(maxPop * 100) // 강수확률을 백분율로 변환
+              });
+            } else {
+              // 데이터가 없는 경우 기본값 설정
+              dailyData.push({
+                dt: date.getTime() / 1000,
+                main: {
+                  temp_max: 0,
+                  temp_min: 0,
+                  temp: 0,
+                  humidity: 0
+                },
+                weather: [{
+                  icon: '01d',
+                  description: 'no data'
+                }]
+              });
+            }
           }
           setWeatherData(dailyData);
         }
@@ -138,10 +194,16 @@ const Weather = () => {
   if (!weatherData) return <div>데이터가 없습니다.</div>;
 
   return (
+<<<<<<< HEAD
     <div className="p-4 max-w-4xl mx-auto bg-gray-400 rounded-lg">
       <h2 className="text-xl font-medium mb-4 text-black">주간예보</h2>
 
       {/* 전체 컨테이너에 동일한 width 적용 */}
+=======
+    <div className="p-4 max-w-4xl mx-auto">
+      <h2 className="text-xl font-medium mb-4">주간예보</h2>
+      
+>>>>>>> 5dae32bb8f37fc709e8be8bf16b5b3c563d53559
       <div className="max-w-3xl mx-auto">
         {/* 오늘과 내일 날씨 */}
         <div className="grid grid-cols-2 gap-4 mb-6">
@@ -160,6 +222,7 @@ const Weather = () => {
                   </div>
                   <div className="text-right">
                     <div className="flex items-center gap-2">
+<<<<<<< HEAD
                       <span className="text-blue-500">
                         {Math.round(day.main.temp_min)}°
                       </span>
@@ -172,6 +235,17 @@ const Weather = () => {
                         {day.main.humidity}%
                       </span>
                       <span className="text-white">강수확률</span>
+=======
+                      <span className="text-blue-500">{Math.round(day.main.temp_min)}°</span>
+                      <span className="text-gray-500">{Math.round(day.main.temp)}°</span>
+                      <span className="text-red-500">{Math.round(day.main.temp_max)}°</span>
+                    </div>
+                    <div className="text-sm text-blue-500">
+                      강수확률: {day.pop || 0}%
+                    </div>
+                    <div className="text-sm text-blue-500">
+                      강수량: {day.rain ? day.rain.toFixed(1) : '0.0'}mm
+>>>>>>> 5dae32bb8f37fc709e8be8bf16b5b3c563d53559
                     </div>
                   </div>
                 </div>
@@ -197,6 +271,7 @@ const Weather = () => {
                   {getWeatherIcon(day.weather[0].icon)}
                 </div>
                 <div className="flex justify-center gap-2 text-sm">
+<<<<<<< HEAD
                   <span className="text-blue-500">
                     {Math.round(day.main.temp_min)}°
                   </span>
@@ -207,6 +282,16 @@ const Weather = () => {
                 <div className="text-sm text-blue-500">
                   {day.main.humidity}%
                 </div>
+=======
+                  <span className="text-blue-500">{Math.round(day.main.temp_min)}°</span>
+                  <span className="text-gray-500">{Math.round(day.main.temp)}°</span>
+                  <span className="text-red-500">{Math.round(day.main.temp_max)}°</span>
+                </div>
+                <div className="text-sm text-blue-500">{day.pop || 0}%</div>
+                <div className="text-sm text-blue-500">
+                  {day.rain ? day.rain.toFixed(1) : '0.0'}mm
+                </div>
+>>>>>>> 5dae32bb8f37fc709e8be8bf16b5b3c563d53559
               </div>
             );
           })}
@@ -215,6 +300,11 @@ const Weather = () => {
     </div>
   );
 };
+<<<<<<< HEAD
 // const iconUrl = `http://openweathermap.org/img/wn/${day.weather[0].icon}@2x.png`;
 // npm install weather-icons-react
 export default Weather;
+=======
+
+export default Weather;
+>>>>>>> 5dae32bb8f37fc709e8be8bf16b5b3c563d53559

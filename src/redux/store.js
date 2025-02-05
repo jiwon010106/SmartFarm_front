@@ -5,6 +5,7 @@ import authReducer from "./slices/authslice";
 import loginReducer from "./slices/loginslice";
 import apiReducer from "./slices/apiSlice";
 import writeReducer from "./slices/writeSlice";
+import commentReducer from "./slices/commentSlice";
 
 const store = configureStore({
   reducer: combineReducers({
@@ -12,6 +13,7 @@ const store = configureStore({
     login: loginReducer,
     apis: apiReducer,
     write: writeReducer,
+    comments: commentReducer,
   }),
 });
 

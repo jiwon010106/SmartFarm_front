@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import axios from "axios";
 import mediLogo from "../../assets/medi_logo.png";
+import Swal from "sweetalert2";
 
 const FindPwd = () => {
   const [email, setEmail] = useState("");
@@ -16,10 +17,18 @@ const FindPwd = () => {
         email,
       });
 
-      alert(response.data.message);
-      setEmail(""); // 입력 필드 초기화
+      await Swal.fire({
+        icon: "success",
+        title: "이메일 발송 완료",
+        text: response.data.message,
+      });
+      setEmail("");
     } catch (error) {
-      alert(error.response?.data?.error || "서버와 연결할 수 없습니다.");
+      await Swal.fire({
+        icon: "error",
+        title: "오류 발생",
+        text: error.response?.data?.error || "서버와 연결할 수 없습니다.",
+      });
     } finally {
       setIsLoading(false);
     }

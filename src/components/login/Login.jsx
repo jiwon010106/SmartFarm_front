@@ -3,6 +3,7 @@ import { useDispatch } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
 import { fetchPostLoginData } from "../../redux/slices/authslice.js";
 import { setToken } from "../../redux/slices/loginslice.js";
+import Swal from "sweetalert2";
 
 const Login = () => {
   const dispatch = useDispatch();
@@ -27,7 +28,11 @@ const Login = () => {
     // console.log(value.id);
 
     if (value.email === "" || value.password === "") {
-      alert("email, password는 필수 입력값입니다.");
+      await Swal.fire({
+        icon: "warning",
+        title: "입력 오류",
+        text: "이메일, 비밀번호는 필수 입력값입니다.",
+      });
       return;
     }
 
@@ -40,15 +45,29 @@ const Login = () => {
         // getItem('저장된 이름(key)') - 저장된 이름의 값을 가져옴
         // removeItem('저장된 이름(key)'): 저장된 이름의 값을 삭제
         dispatch(setToken(response.data.token));
+        await Swal.fire({
+          icon: "success",
+          text: "로그인에 성공했습니다.",
+          timer: 1500,
+          showConfirmButton: false,
+        });
         navigator("/");
         return;
       }
       if (response.data.success === false) {
-        alert(response.data.msg);
+        await Swal.fire({
+          icon: "error",
+          title: "로그인에 실패했습니다.",
+          text: response.data.msg,
+        });
         return;
       }
     } catch (error) {
-      alert(error.msg);
+      await Swal.fire({
+        icon: "error",
+        title: "오류 발생",
+        text: error.msg,
+      });
     }
   };
 
