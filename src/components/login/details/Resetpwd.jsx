@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import axios from "axios";
 import mediLogo from "../../assets/medi_logo.png";
+import Swal from "sweetalert2";
 
 const ResetPwd = () => {
   const navigator = useNavigate();
@@ -16,8 +17,13 @@ const ResetPwd = () => {
 
   useEffect(() => {
     if (!token) {
-      alert("유효하지 않은 접근입니다.");
-      setTimeout(() => navigator("/findpwd"), 2000);
+      Swal.fire({
+        icon: "error",
+        title: "접근 오류",
+        text: "유효하지 않은 접근입니다.",
+      }).then(() => {
+        navigator("/findpwd");
+      });
     }
   }, [token, navigator]);
 
@@ -32,7 +38,11 @@ const ResetPwd = () => {
     e.preventDefault();
 
     if (passwords.password !== passwords.confirm_password) {
-      alert("비밀번호가 일치하지 않습니다.");
+      await Swal.fire({
+        icon: "error",
+        title: "비밀번호 불일치",
+        text: "비밀번호가 일치하지 않습니다.",
+      });
       return;
     }
 
@@ -47,10 +57,19 @@ const ResetPwd = () => {
         }
       );
 
-      alert(response.data.message);
+      await Swal.fire({
+        icon: "success",
+        title: "비밀번호 변경 완료",
+        text: response.data.message,
+      });
+
       setTimeout(() => navigator("/login"), 2000);
     } catch (error) {
-      alert(error.response?.data?.error || "비밀번호 재설정에 실패했습니다.");
+      await Swal.fire({
+        icon: "error",
+        title: "비밀번호 변경 실패",
+        text: error.response?.data?.error || "비밀번호 재설정에 실패했습니다.",
+      });
     } finally {
       setIsLoading(false);
     }

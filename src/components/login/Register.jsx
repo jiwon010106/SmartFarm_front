@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
+import Swal from "sweetalert2";
 
 import {
   fetchPostAuthData,
@@ -23,8 +24,13 @@ const Register = () => {
   useEffect(() => {
     const token = localStorage.getItem("token");
     if (token) {
-      alert("이미 로그인된 상태입니다.");
-      navigator("/");
+      Swal.fire({
+        icon: "info",
+        title: "알림",
+        text: "이미 로그인된 상태입니다.",
+      }).then(() => {
+        navigator("/");
+      });
     }
   }, [navigator]);
 
@@ -48,34 +54,57 @@ const Register = () => {
   /* State 관리: 사용자 입력값과 인증 코드를 관리하기 위한 상태를 정의합니다. */
   const handleSendVerification = async () => {
     if (!value.email) {
-      alert("이메일을 입력해주세요.");
+      await Swal.fire({
+        icon: "warning",
+        title: "입력 오류",
+        text: "이메일을 입력해주세요.",
+      });
       return;
     }
     try {
       const result = await dispatch(
         fetchPostEmailVerificationData(value.email)
       ).unwrap();
-
       if (result.message) {
-        alert(result.message);
+        await Swal.fire({
+          icon: "success",
+          title: "인증코드 발송",
+          text: result.message,
+        });
       }
     } catch (error) {
-      alert("인증 코드 발송 실패");
+      await Swal.fire({
+        icon: "error",
+        title: "발송 실패",
+        text: "인증 코드 발송에 실패했습니다.",
+      });
     }
   };
 
   /* - 인증 코드 발송: 이메일 입력 후 인증 코드를 발송하는 함수입니다. 이메일이 입력되지 않으면 경고를 표시합니다. */
-  const handleVerifyCode = () => {
+  const handleVerifyCode = async () => {
     if (!userInputCode) {
-      alert("인증 코드를 입력해주세요.");
+      await Swal.fire({
+        icon: "warning",
+        title: "입력 오류",
+        text: "인증 코드를 입력해주세요.",
+      });
       return;
     }
 
     if (userInputCode === verificationCode?.data?.verificationCode) {
       dispatch(verifyEmail());
-      alert("이메일 인증이 완료되었습니다.");
+      await Swal.fire({
+        icon: "success",
+        title: "인증 완료",
+        text: "이메일 인증이 완료되었습니다.",
+      });
     } else {
-      alert("인증코드가 일치하지 않습니다.");
+      await Swal.fire({
+        icon: "error",
+        title: "인증 실패",
+        text: "인증코드가 일치하지 않습니다.",
+      });
     }
   };
 
@@ -104,12 +133,20 @@ const Register = () => {
     const today = new Date();
 
     if (selectedDate > today) {
-      alert("생년월일은 오늘 이후의 날짜를 선택할 수 없습니다.");
+      await Swal.fire({
+        icon: "warning",
+        title: "입력 오류",
+        text: "생년월일은 오늘 이후의 날짜를 선택할 수 없습니다.",
+      });
       return;
     }
 
     if (!isEmailVerified) {
-      alert("이메일 인증이 필요합니다.");
+      await Swal.fire({
+        icon: "warning",
+        title: "인증 필요",
+        text: "이메일 인증이 필요합니다.",
+      });
       return;
     }
 
@@ -119,11 +156,19 @@ const Register = () => {
       value.confirm_password === "" ||
       value.birth_date === ""
     ) {
-      alert("모든 항목은 필수 입력값입니다.");
+      await Swal.fire({
+        icon: "warning",
+        title: "입력 오류",
+        text: "모든 항목은 필수 입력값입니다.",
+      });
       return;
     }
     if (value.password !== value.confirm_password) {
-      alert("비밀번호가 일치하지 않습니다.");
+      await Swal.fire({
+        icon: "error",
+        title: "비밀번호 불일치",
+        text: "비밀번호가 일치하지 않습니다.",
+      });
       return;
     }
 
@@ -136,16 +181,28 @@ const Register = () => {
     try {
       const response = await dispatch(fetchPostAuthData(data)).unwrap();
       if (response.status === 200) {
-        alert(response.data.msg);
+        await Swal.fire({
+          icon: "success",
+          title: "회원가입 성공",
+          text: response.data.msg,
+        });
         navigator("/login");
         return;
       }
       if (response.data.success === false) {
-        alert(response.data.msg);
+        await Swal.fire({
+          icon: "error",
+          title: "회원가입 실패",
+          text: response.data.msg,
+        });
         return;
       }
     } catch (error) {
-      alert(error.msg);
+      await Swal.fire({
+        icon: "error",
+        title: "오류 발생",
+        text: error.msg,
+      });
     }
   };
 

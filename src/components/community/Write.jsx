@@ -7,6 +7,7 @@ import {
 } from "../../redux/slices/writeSlice";
 import { deleteRequest } from "../../utils/requestMethods";
 import WriteModal from "./WriteModal";
+import { useNavigate } from "react-router-dom";
 
 const Write = () => {
   const dispatch = useDispatch();
@@ -15,6 +16,7 @@ const Write = () => {
   const currentUserId = parseInt(localStorage.getItem("userId"));
   const [selectedPost, setSelectedPost] = useState(null);
   const [modalMode, setModalMode] = useState(null);
+  const navigate = useNavigate();
 
   const handleDelete = async (postId, e) => {
     e.stopPropagation(); // 이벤트 버블링 방지
@@ -39,9 +41,8 @@ const Write = () => {
     setModalMode("edit");
   };
 
-  const handlePostClick = (post) => {
-    setSelectedPost(post);
-    setModalMode("view");
+  const handlePostClick = (postId) => {
+    navigate(`/post/${postId}`);
   };
 
   const handlePostDeleted = (deletedPostId) => {
@@ -59,44 +60,41 @@ const Write = () => {
   }
 
   return (
-    <div className="space-y-4">
-      {posts.map((post) => (
-        <div
-          key={post.post_id}
-          className="p-4 border border-gray-200 rounded-lg hover:shadow-md transition-shadow cursor-pointer"
-          onClick={() => handlePostClick(post)}
-        >
-          <div className="flex justify-between items-center mb-2">
-            <h4 className="text-lg font-semibold">{post.title}</h4>
-            <span className="text-sm text-gray-500">
-              {new Date(post.date).toLocaleDateString()}
-            </span>
-          </div>
-          <p className="text-gray-600 mb-2">{post.content}</p>
-          <div className="flex justify-between items-center text-sm text-gray-500">
-            <div>
-              <span>작성자: {post.email}</span>
-              <span className="ml-4">카테고리: {post.category}</span>
-            </div>
-            {currentUserId === post.user_id && (
-              <div className="flex space-x-2">
-                <button
-                  onClick={(e) => handleEdit(post, e)}
-                  className="text-blue-500 hover:text-blue-700"
-                >
-                  수정
-                </button>
-                <button
-                  onClick={(e) => handleDelete(post.post_id, e)}
-                  className="text-red-500 hover:text-red-700"
-                >
-                  삭제
-                </button>
-              </div>
-            )}
-          </div>
-        </div>
-      ))}
+    <div className="container mx-auto p-4">
+      <table className="min-w-full">
+        <thead>
+          <tr className="bg-gray-100">
+            <th className="px-6 py-3 text-left text-sm font-semibold text-gray-600">
+              제목
+            </th>
+            <th className="px-6 py-3 text-left text-sm font-semibold text-gray-600">
+              카테고리
+            </th>
+            <th className="px-6 py-3 text-left text-sm font-semibold text-gray-600">
+              작성자
+            </th>
+            <th className="px-6 py-3 text-left text-sm font-semibold text-gray-600">
+              작성일
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          {posts.map((post) => (
+            <tr
+              key={post.post_id}
+              onClick={() => handlePostClick(post.post_id)}
+              className="border-b hover:bg-gray-50 cursor-pointer"
+            >
+              <td className="px-6 py-4">{post.title}</td>
+              <td className="px-6 py-4">{post.category}</td>
+              <td className="px-6 py-4">{post.email}</td>
+              <td className="px-6 py-4">
+                {new Date(post.date).toLocaleDateString()}
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
 
       {selectedPost && (
         <WriteModal
