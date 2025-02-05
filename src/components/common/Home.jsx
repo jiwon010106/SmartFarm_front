@@ -4,6 +4,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { createTop5Chart } from "../../data/createTop10Chart";
 import { fetchGetTop5Data } from "../../redux/slices/apiSlice";
 import landingImg from "../../assets/main/mainlanding.jpg";
+import Test3 from "../test/Test3";
 
 const Home = () => {
   const chartRef = useRef(null);
@@ -26,10 +27,10 @@ const Home = () => {
   }, [top5Data]);
 
   return (
-<<<<<<< HEAD
     <div className="w-full">
+      {/* <Test3 /> */}
       <div className="relative">
-        <div className="overflow-hidden flex justify-center items-center relative max-h-[600px] min-h-[300px]">
+        <div className="flex justify-center items-center relative max-h-[600px] min-h-[300px]">
           <div className="absolute opacity-30 overlay w-full h-full bg-white left-0 top-0"></div>
           <div
             className="slogan-box absolute 
@@ -61,19 +62,6 @@ const Home = () => {
             <div id="top5-chart" ref={chartRef} />
           </div>
         </div>
-=======
-    <div className="container">
-      <img src={landingImg} alt="" className="w-full" />
-      <div className="flex justify-center items-center gap-40 m-[50px] hover:text-green-500">
-        <Link to="/pricingInformation">소비 트랜드</Link>
-        <Link to="/sellInformation">가격예측</Link>
-        <Link to="/pests">육성법</Link>
-        <Link to="/trainingMethod">작물육성방법</Link>
-        <Link to="/Community">게시글 작성</Link>
-      </div>
-      <div className="w-[500px] h-[420px] text-white rounded-lg p-4">
-        <div id="top5-chart" ref={chartRef} />
->>>>>>> 25e154ada14d0ed49b54fb9d784af78355bacb1f
       </div>
     </div>
   );

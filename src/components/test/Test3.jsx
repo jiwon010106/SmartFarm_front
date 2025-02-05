@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from "react";
 import { gsap } from "gsap";
+import { useNavigate } from "react-router-dom";
 
 const Test3 = () => {
   const [activeIndex, setActiveIndex] = useState(0);
-
+  const navigate = useNavigate();
   const images = [
     "http://www.cimon.co.kr/wp-content/uploads/2017/02/farm_02-e1486360904274.jpg",
     "https://cdn.hankyung.com/photo/202311/01.32189912.1.jpg",
@@ -53,7 +54,6 @@ const Test3 = () => {
 
   useEffect(() => {
     const items = document.querySelectorAll(".accordion-item");
-
     const timeline = gsap.timeline();
 
     items.forEach((item, i) => {
