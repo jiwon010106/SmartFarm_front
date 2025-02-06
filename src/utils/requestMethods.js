@@ -6,6 +6,7 @@ export async function postRequest(url, options) {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
+      Authorization: `Bearer ${localStorage.getItem("token")}`,
     },
     ...options,
   };
@@ -99,16 +100,17 @@ export async function putRequest(url, options) {
     method: "PUT",
     headers: {
       "Content-Type": "application/json",
+      Authorization: `Bearer ${localStorage.getItem("token")}`,
     },
     ...options,
   };
 
-  return await fetch(url, defaultOptions).then((response) => {
-    if (!response.ok) {
-      throw new Error("Network response was not ok");
-    }
-    return response.json();
-  });
+  const response = await fetch(url, defaultOptions);
+  if (!response.ok) {
+    const errorData = await response.json();
+    throw new Error(errorData.message || "Network response was not ok");
+  }
+  return response.json();
 }
 
 /* ====== Common Patch Request Function ====== */
@@ -122,22 +124,31 @@ export async function patchRequest(url, options) {
 }
 
 /* ====== Common Delete Request Function ====== */
-export async function deleteRequest(url, options) {
-  return await fetch(url, options).then((response) => {
-    if (!response.ok) {
-      throw new Error("Network response was not ok");
-    }
-    return response.json();
+export async function deleteRequest(url) {
+  const response = await fetch(url, {
+    method: "DELETE",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${localStorage.getItem("token")}`,
+    },
   });
+
+  if (!response.ok) {
+    const errorData = await response.json();
+    throw new Error(errorData.message || "Network response was not ok");
+  }
+  return response.json();
 }
 
 /* ====== Common GET Request Function ====== */
 export async function getRequest(url) {
   try {
-    const response = await fetch(url);
-
-    // 응답 상태 확인용 로그
-    // console.log("응답 상태:", response.status);
+    const response = await fetch(url, {
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${localStorage.getItem("token")}`,
+      },
+    });
 
     if (!response.ok) {
       const errorData = await response.json();
@@ -146,7 +157,6 @@ export async function getRequest(url) {
     }
 
     const data = await response.json();
-    // console.log("응답 데이터:", data); // 데이터 확인용 로그
     return data;
   } catch (error) {
     console.error("요청 처리 중 오류 발생:", error);
