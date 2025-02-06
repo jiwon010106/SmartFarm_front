@@ -5,7 +5,6 @@ import {
   selectLoading,
   getPostsSuccess,
 } from "../../redux/slices/writeSlice";
-import { deleteRequest } from "../../utils/requestMethods";
 import WriteModal from "./WriteModal";
 import { useNavigate } from "react-router-dom";
 
@@ -13,36 +12,13 @@ const Write = () => {
   const dispatch = useDispatch();
   const posts = useSelector(selectPosts);
   const loading = useSelector(selectLoading);
-  const currentUserId = parseInt(localStorage.getItem("userId"));
+
   const [selectedPost, setSelectedPost] = useState(null);
   const [modalMode, setModalMode] = useState(null);
   const navigate = useNavigate();
 
-  const handleDelete = async (postId, e) => {
-    e.stopPropagation(); // 이벤트 버블링 방지
-    if (window.confirm("정말 삭제하시겠습니까?")) {
-      try {
-        await deleteRequest(`http://localhost:8000/api/write/${postId}`, {
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem("token")}`,
-          },
-        });
-        window.location.reload();
-      } catch (error) {
-        console.error("게시글 삭제 실패:", error);
-        alert("게시글 삭제에 실패했습니다.");
-      }
-    }
-  };
-
-  const handleEdit = (post, e) => {
-    e.stopPropagation(); // 이벤트 버블링 방지
-    setSelectedPost(post);
-    setModalMode("edit");
-  };
-
   const handlePostClick = (postId) => {
-    navigate(`/post/${postId}`);
+    navigate(`/Community/${postId}`);
   };
 
   const handlePostDeleted = (deletedPostId) => {

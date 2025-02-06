@@ -18,6 +18,7 @@ import SalsesInformation from "./components/SalsesInformation/SalsesInformation"
 import Pests from "./components/pests/Pests";
 import TrainingMethod from "./components/trainingMethod/TrainingMethod";
 import PostDetail from "./components/community/PostDetail";
+import Write from "./components/community/Write";
 
 function App() {
   return (
@@ -34,6 +35,7 @@ function App() {
             />
             <Route path="/Community" element={<Community />} />
             <Route path="/Community/:postId" element={<PostDetail />} />
+            <Route path="/Community/write" element={<Write />} />
             <Route path="/register" element={<Register />} />
             <Route path="/sellInformation" element={<SalsesInformation />} />
             <Route path="/pests" element={<Pests />} />

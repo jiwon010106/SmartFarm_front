@@ -18,7 +18,8 @@ const PostDetail = () => {
     email: "",
     date: new Date(),
   });
-  const [comments, setComments] = useState([]);
+  const [comments, setComments] = useState([]); // 빈 배열로 초기화
+  const [loading, setLoading] = useState(true); // 로딩 상태 추가
   const [newComment, setNewComment] = useState("");
   const currentUserId = parseInt(localStorage.getItem("userId"));
 
@@ -27,6 +28,7 @@ const PostDetail = () => {
   }, [postId]);
 
   const fetchPostAndComments = async () => {
+    setLoading(true);
     try {
       const postResponse = await getRequest(
         `http://localhost:8000/api/write/${postId}`
@@ -35,10 +37,13 @@ const PostDetail = () => {
         `http://localhost:8000/api/comments/${postId}`
       );
       setPost(postResponse.data);
-      setComments(commentsResponse.data);
+      setComments(commentsResponse.data || []); // null/undefined 처리
     } catch (error) {
       console.error("데이터 로딩 실패:", error);
       Swal.fire("오류", "게시글을 불러오는데 실패했습니다.", "error");
+      setComments([]); // 에러 시 빈 배열로 설정
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -101,7 +106,7 @@ const PostDetail = () => {
     return categories[category] || category;
   };
 
-  if (!post) return <div className="text-center py-8">로딩 중...</div>;
+  if (loading) return <div className="text-center py-8">로딩 중...</div>;
 
   return (
     <div className="container mx-auto p-6 max-w-4xl">
@@ -163,17 +168,21 @@ const PostDetail = () => {
 
         {/* 댓글 목록 */}
         <div className="space-y-4">
-          {comments.map((comment) => (
-            <div key={comment.id} className="border-b pb-4">
-              <div className="flex justify-between items-center mb-2">
-                <span className="font-semibold">{comment.email}</span>
-                <span className="text-sm text-gray-500">
-                  {new Date(comment.created_at).toLocaleDateString()}
-                </span>
+          {comments && comments.length > 0 ? (
+            comments.map((comment) => (
+              <div key={comment.id} className="border-b pb-4">
+                <div className="flex justify-between items-center mb-2">
+                  <span className="font-semibold">{comment.email}</span>
+                  <span className="text-sm text-gray-500">
+                    {new Date(comment.created_at).toLocaleDateString()}
+                  </span>
+                </div>
+                <p className="text-gray-700">{comment.content}</p>
               </div>
-              <p className="text-gray-700">{comment.content}</p>
-            </div>
-          ))}
+            ))
+          ) : (
+            <div className="text-center text-gray-500">댓글이 없습니다.</div>
+          )}
         </div>
       </div>
     </div>
