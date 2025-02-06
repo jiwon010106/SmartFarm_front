@@ -18,7 +18,7 @@ const Home = () => {
 
   useEffect(() => {
     if (top5Data) {
-      console.log("Top5 데이터:", top5Data);
+      // console.log("Top5 데이터:", top5Data);
       try {
         createTop5Chart("top5-chart", top5Data);
       } catch (error) {
