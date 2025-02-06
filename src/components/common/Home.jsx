@@ -2,6 +2,7 @@ import React, { useEffect, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { createTop5Chart } from "../../data/createTop10Chart";
 import { fetchGetTop5Data } from "../../redux/slices/apiSlice";
+import { Link } from "react-router-dom";
 // import landingImg from "../../assets/main/mainlanding.jpg";
 import Test3 from "../test/Test3";
 import Test1 from "../test/Test1";
@@ -33,7 +34,7 @@ const Home = () => {
       <div className="relative">
         {/* 날씨정보 API */}
         <div className="flex justify-center items-center relative max-h-[600px] min-h-[300px]">
-          <div className="absolute opacity-30 overlay w-full h-full bg-gray-200 left-0 top-0"></div>
+          <div className="absolute opacity-30 overlay w-full h-full bg-transparent left-0 top-0"></div>
           <div className="flex w-full h-full text-white rounded-lg p-4">
             <div id="top5-chart" ref={chartRef} />
             <Test1 />
