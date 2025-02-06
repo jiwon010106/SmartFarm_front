@@ -58,7 +58,7 @@ const PostDetail = () => {
       // commentsResponse가 배열인지 확인하고 설정
       setComments(Array.isArray(commentsResponse) ? commentsResponse : []);
 
-      console.log("Fetched comments:", commentsResponse); // 디버깅용
+      // console.log("Fetched comments:", commentsResponse); // 디버깅용
     } catch (error) {
       console.error("데이터 로딩 실패:", error);
       Swal.fire("오류", "게시글을 불러오는데 실패했습니다.", "error");
