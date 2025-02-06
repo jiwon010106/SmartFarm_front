@@ -27,7 +27,6 @@ const Home = () => {
   }, [top5Data]);
 
   return (
-<<<<<<< HEAD
     <div className="w-full">
       {/* 아코디안 아이템 */}
       <Test3 />
@@ -48,9 +47,10 @@ const Home = () => {
           /> */}
           <div className="w-[500px] h-[420px] text-white rounded-lg p-4"></div>
         </div>
-=======
-    <div className="container">
-      <div className="relative">
+      </div>
+
+      <div className="container">
+        <div className="relative">
         <div className="overflow-hidden flex justify-center items-center relative max-h-[600px] min-h-[300px]">
           <div className="absolute opacity-30 overlay w-full h-full bg-white left-0 top-0"></div>
           <div className="slogan-box absolute left-1/2 transform -translate-x-1/2 lg:left-[20%] lg:transform-none top-[25%] flex flex-col gap-4">
@@ -85,7 +85,6 @@ const Home = () => {
 
       <div className="w-[500px] h-[420px] text-white rounded-lg p-4">
         <div id="top5-chart" ref={chartRef} />
->>>>>>> 5dae32bb8f37fc709e8be8bf16b5b3c563d53559
       </div>
     </div>
   );
