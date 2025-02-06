@@ -1,9 +1,10 @@
 import React, { useEffect, useRef } from "react";
-import { Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { createTop5Chart } from "../../data/createTop10Chart";
 import { fetchGetTop5Data } from "../../redux/slices/apiSlice";
-import landingImg from "../../assets/main/mainlanding.jpg";
+// import landingImg from "../../assets/main/mainlanding.jpg";
+import Test3 from "../test/Test3";
+import Test1 from "../test/Test1";
 
 const Home = () => {
   const chartRef = useRef(null);
@@ -26,6 +27,28 @@ const Home = () => {
   }, [top5Data]);
 
   return (
+<<<<<<< HEAD
+    <div className="w-full">
+      {/* 아코디안 아이템 */}
+      <Test3 />
+      <div className="relative">
+        {/* 날씨정보 API */}
+        <div className="flex justify-center items-center relative max-h-[600px] min-h-[300px]">
+          <div className="absolute opacity-30 overlay w-full h-full bg-gray-200 left-0 top-0"></div>
+          <div className="flex w-full h-full text-white rounded-lg p-4">
+            <div id="top5-chart" ref={chartRef} />
+            <Test1 />
+          </div>
+        </div>
+        <div className="container">
+          {/* <img
+            src={landingImg}
+            alt=""
+            className="w-full max-h-[600px] min-h-[300px]"
+          /> */}
+          <div className="w-[500px] h-[420px] text-white rounded-lg p-4"></div>
+        </div>
+=======
     <div className="container">
       <div className="relative">
         <div className="overflow-hidden flex justify-center items-center relative max-h-[600px] min-h-[300px]">
@@ -62,6 +85,7 @@ const Home = () => {
 
       <div className="w-[500px] h-[420px] text-white rounded-lg p-4">
         <div id="top5-chart" ref={chartRef} />
+>>>>>>> 5dae32bb8f37fc709e8be8bf16b5b3c563d53559
       </div>
     </div>
   );
