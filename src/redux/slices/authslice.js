@@ -132,9 +132,8 @@ const handleRejected = (state, action) => {
 };
 
 const authSlice = createSlice({
-  name: "auth", // slice 기능 이름
+  name: "auth",
   initialState: {
-    // 초기 상태 지정
     postAuthData: null,
     postLoginData: null,
     verificationCode: null,
@@ -143,6 +142,7 @@ const authSlice = createSlice({
     errorMessage: null,
     deleteAuthData: null,
     updateAuthData: null,
+    loginExpireTime: null,
   },
   reducers: {
     verifyEmail: (state, action) => {
@@ -159,6 +159,39 @@ const authSlice = createSlice({
       localStorage.removeItem("token");
       localStorage.removeItem("user");
     },
+    logout: (state) => {
+      // Redux 상태 초기화
+      state.postLoginData = null;
+      state.loginExpireTime = null;
+      state.isEmailVerified = false;
+      state.verificationCode = null;
+      state.deleteAuthData = null;
+      state.updateAuthData = null;
+      state.isError = false;
+      state.errorMessage = null;
+
+      // localStorage 완전 정리
+      localStorage.clear(); // 모든 데이터 삭제
+
+      // 필요한 경우 sessionStorage도 정리
+      sessionStorage.clear();
+    },
+    checkLoginStatus: (state) => {
+      const expireTime = localStorage.getItem("loginExpireTime");
+      if (expireTime && new Date().getTime() > parseInt(expireTime)) {
+        state.postLoginData = null;
+        state.loginExpireTime = null;
+        localStorage.removeItem("token");
+        localStorage.removeItem("user");
+        localStorage.removeItem("loginExpireTime");
+      }
+    },
+    setLoginExpireTime: (state) => {
+      const expireTime = new Date();
+      expireTime.setHours(expireTime.getHours() + 24);
+      state.loginExpireTime = expireTime.getTime();
+      localStorage.setItem("loginExpireTime", expireTime.getTime());
+    },
   },
 
   extraReducers: (builder) => {
@@ -166,7 +199,13 @@ const authSlice = createSlice({
       .addCase(fetchPostAuthData.fulfilled, handleFulfilled("postAuthData"))
       .addCase(fetchPostAuthData.rejected, handleRejected)
 
-      .addCase(fetchPostLoginData.fulfilled, handleFulfilled("postLoginData"))
+      .addCase(fetchPostLoginData.fulfilled, (state, action) => {
+        state.postLoginData = action.payload;
+        const expireTime = new Date();
+        expireTime.setHours(expireTime.getHours() + 24);
+        state.loginExpireTime = expireTime.getTime();
+        localStorage.setItem("loginExpireTime", expireTime.getTime());
+      })
       .addCase(fetchPostLoginData.rejected, handleRejected)
 
       .addCase(fetchPostEmailVerificationData.fulfilled, (state, action) => {
@@ -185,8 +224,14 @@ const authSlice = createSlice({
       })
       .addCase(fetchUpdateAuthData.rejected, handleRejected);
   },
-}); // slice 객체 저장
+});
 
-export const { verifyEmail, resetAuthState, cancelMembership } =
-  authSlice.actions;
+export const {
+  verifyEmail,
+  resetAuthState,
+  cancelMembership,
+  logout,
+  checkLoginStatus,
+  setLoginExpireTime,
+} = authSlice.actions;
 export default authSlice.reducer;
