@@ -23,15 +23,7 @@ import { useDispatch } from "react-redux";
 import { checkLoginStatus, logout } from "./redux/slices/authslice";
 
 function App() {
-<<<<<<< HEAD
-  return (
-    <Provider store={store}>
-      <Router>
-        <div className="App">
-          <Header />
-=======
   const dispatch = useDispatch();
->>>>>>> b8748636a5404bdd3d2cbe1e794b89d19732b54e
 
   useEffect(() => {
     // 페이지 로드시 최초 1회 체크
@@ -67,29 +59,34 @@ function App() {
   }, [dispatch]);
 
   return (
-    <Router>
-      <div className="App">
-        <Hearder />
+    <Provider store={store}>
+      <Router>
+        <div className="App">
+          <Header />
 
-        <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/pricingInformation" element={<PricingInformation />} />
-          <Route path="/Community" element={<Community />} />
-          <Route path="/Community/:postId" element={<PostDetail />} />
-          <Route path="/Community/write" element={<Write />} />
-          <Route path="/register" element={<Register />} />
-          <Route path="/sellInformation" element={<SalsesInformation />} />
-          <Route path="/pests" element={<Pests />} />
-          <Route path="/login" element={<Login />} />
-          <Route path="/mypage" element={<Mypage />} />
-          <Route path="/trainingMethod" element={<TrainingMethod />} />
-          <Route path="/test1" element={<Test1 />} />
-          <Route path="/test2" element={<Test2 />} />
-          <Route path="/test3" element={<Test3 />} />
-        </Routes>
-        <Footer />
-      </div>
-    </Router>
+          <Routes>
+            <Route path="/" element={<Home />} />
+            <Route
+              path="/pricingInformation"
+              element={<PricingInformation />}
+            />
+            <Route path="/Community" element={<Community />} />
+            <Route path="/Community/:postId" element={<PostDetail />} />
+            <Route path="/Community/write" element={<Write />} />
+            <Route path="/register" element={<Register />} />
+            <Route path="/sellInformation" element={<SalsesInformation />} />
+            <Route path="/pests" element={<Pests />} />
+            <Route path="/login" element={<Login />} />
+            <Route path="/mypage" element={<Mypage />} />
+            <Route path="/trainingMethod" element={<TrainingMethod />} />
+            <Route path="/test1" element={<Test1 />} />
+            <Route path="/test2" element={<Test2 />} />
+            <Route path="/test3" element={<Test3 />} />
+          </Routes>
+          <Footer />
+        </div>
+      </Router>
+    </Provider>
   );
 }
 
