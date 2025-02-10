@@ -5,175 +5,51 @@ import {
   createPostSuccess,
   createPostFailure,
 } from "../../redux/slices/writeSlice";
-import {
-  postMyMediRequest,
-  putRequest,
-  deleteRequest,
-} from "../../utils/requestMethods";
+import { postMyMediRequest } from "../../utils/requestMethods";
 import Swal from "sweetalert2";
 
-const CreatePostModal = ({
-  isOpen,
-  onClose,
-  mode: initialMode = "create",
-  post = null,
-  onPostDeleted,
-}) => {
+const CreatePostModal = ({ isOpen, onClose }) => {
   const dispatch = useDispatch();
-
-  // JWT 토큰에서 userId 추출
-  const getCurrentUserId = () => {
-    const token = localStorage.getItem("token");
-    if (!token) return 0;
-
-    try {
-      const base64Url = token.split(".")[1];
-      const base64 = base64Url.replace(/-/g, "+").replace(/_/g, "/");
-      const jsonPayload = decodeURIComponent(
-        atob(base64)
-          .split("")
-          .map(function (c) {
-            return "%" + ("00" + c.charCodeAt(0).toString(16)).slice(-2);
-          })
-          .join("")
-      );
-
-      return JSON.parse(jsonPayload).id;
-    } catch (error) {
-      console.error("토큰 디코딩 실패:", error);
-      return 0;
-    }
-  };
-
-  const currentUserId = getCurrentUserId();
-
-  const [mode, setMode] = useState(initialMode);
-  const [postData, setPostData] = useState(
-    post || {
-      title: "",
-      content: "",
-      category: "general",
-    }
-  );
-
-  const handleDelete = async () => {
-    const result = await Swal.fire({
-      title: "정말 삭제하시겠습니까?",
-      text: "이 작업은 되돌릴 수 없습니다!",
-      icon: "warning",
-      showCancelButton: true,
-      confirmButtonColor: "#d33",
-      cancelButtonColor: "#3085d6",
-      confirmButtonText: "삭제",
-      cancelButtonText: "취소",
-    });
-
-    if (result.isConfirmed) {
-      try {
-        const response = await fetch(
-          `http://localhost:8000/api/write/${post.post_id}`,
-          {
-            method: "DELETE",
-            headers: {
-              Authorization: `Bearer ${localStorage.getItem("token")}`,
-              "Content-Type": "application/json",
-            },
-          }
-        );
-
-        if (!response.ok) {
-          const errorData = await response.json();
-          throw new Error(
-            `삭제 실패: ${errorData.message || "알 수 없는 오류"}`
-          );
-        }
-
-        await Swal.fire({
-          title: "삭제 완료!",
-          text: "게시글이 성공적으로 삭제되었습니다.",
-          icon: "success",
-        });
-
-        onClose();
-        if (onPostDeleted) {
-          onPostDeleted(post.post_id);
-        }
-      } catch (error) {
-        console.error("게시글 삭제 실패:", error);
-        await Swal.fire({
-          title: "오류",
-          text: `게시글 삭제에 실패했습니다. ${error.message}`,
-          icon: "error",
-        });
-      }
-    }
-  };
-
-  const handleEditMode = () => {
-    setMode("edit");
-  };
+  const [postData, setPostData] = useState({
+    title: "",
+    content: "",
+    category: "general",
+  });
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    dispatch(createPostStart());
 
-    if (mode === "create") {
-      dispatch(createPostStart());
-      try {
-        const response = await postMyMediRequest(
-          "http://localhost:8000/api/write/create",
-          {
-            body: JSON.stringify(postData),
-          }
-        );
-
-        if (response.status === 201) {
-          dispatch(createPostSuccess(response.data));
-          setPostData({ title: "", content: "", category: "general" });
-          await Swal.fire({
-            title: "성공!",
-            text: "게시글이 성공적으로 작성되었습니다.",
-            icon: "success",
-          });
-          onClose();
-        } else {
-          throw new Error("게시글 작성에 실패했습니다.");
-        }
-      } catch (error) {
-        console.error("게시글 작성 오류:", error);
-        dispatch(
-          createPostFailure(error.message || "게시글 작성에 실패했습니다.")
-        );
-        await Swal.fire({
-          title: "오류",
-          text: "게시글 작성에 실패했습니다.",
-          icon: "error",
-        });
-      }
-    } else if (mode === "edit") {
-      try {
-        await putRequest(`http://localhost:8000/api/write/${post.post_id}`, {
-          method: "PUT",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${localStorage.getItem("token")}`,
-          },
+    try {
+      const response = await postMyMediRequest(
+        "http://localhost:8000/api/write/create",
+        {
           body: JSON.stringify(postData),
-        });
+        }
+      );
+
+      if (response.status === 201) {
+        dispatch(createPostSuccess(response.data));
+        setPostData({ title: "", content: "", category: "general" });
         await Swal.fire({
           title: "성공!",
-          text: "게시글이 성공적으로 수정되었습니다.",
+          text: "게시글이 성공적으로 작성되었습니다.",
           icon: "success",
         });
         onClose();
-        window.location.reload();
-      } catch (error) {
-        console.error("게시글 수정 실패:", error);
-        await Swal.fire({
-          title: "오류",
-          text: "게시글 수정에 실패했습니다.",
-          icon: "error",
-        });
+      } else {
+        throw new Error("게시글 작성에 실패했습니다.");
       }
+    } catch (error) {
+      console.error("게시글 작성 오류:", error);
+      dispatch(
+        createPostFailure(error.message || "게시글 작성에 실패했습니다.")
+      );
+      await Swal.fire({
+        title: "오류",
+        text: "게시글 작성에 실패했습니다.",
+        icon: "error",
+      });
     }
   };
 
@@ -183,13 +59,7 @@ const CreatePostModal = ({
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
       <div className="bg-white rounded-lg p-6 max-w-2xl w-full">
         <div className="flex justify-between items-center mb-4">
-          <h3 className="text-xl font-semibold">
-            {mode === "create"
-              ? "새 게시글 작성"
-              : mode === "edit"
-              ? "게시글 수정"
-              : "게시글 상세"}
-          </h3>
+          <h3 className="text-xl font-semibold">새 게시글 작성</h3>
           <button
             onClick={onClose}
             className="text-gray-500 hover:text-gray-700"
@@ -207,7 +77,6 @@ const CreatePostModal = ({
                 setPostData({ ...postData, category: e.target.value })
               }
               className="w-full p-2 border border-gray-300 rounded-lg"
-              disabled={mode === "view"}
             >
               <option value="general">일반 토론</option>
               <option value="food">식물 재배</option>
@@ -228,7 +97,6 @@ const CreatePostModal = ({
               required
               className="w-full p-2 border border-gray-300 rounded-lg"
               placeholder="제목을 입력하세요"
-              disabled={mode === "view"}
             />
           </div>
 
@@ -243,44 +111,23 @@ const CreatePostModal = ({
               rows="6"
               className="w-full p-2 border border-gray-300 rounded-lg"
               placeholder="내용을 입력하세요"
-              disabled={mode === "view"}
             />
           </div>
 
           <div className="flex justify-end space-x-3">
-            {mode === "view" && currentUserId === post?.user_id && (
-              <>
-                <button
-                  type="button"
-                  onClick={handleEditMode}
-                  className="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600"
-                >
-                  수정
-                </button>
-                <button
-                  type="button"
-                  onClick={handleDelete}
-                  className="px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600"
-                >
-                  삭제
-                </button>
-              </>
-            )}
             <button
               type="button"
               onClick={onClose}
               className="px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200"
             >
-              {mode === "view" ? "닫기" : "취소"}
+              취소
             </button>
-            {mode !== "view" && (
-              <button
-                type="submit"
-                className="px-4 py-2 bg-green-700 text-white rounded-lg hover:bg-green-800"
-              >
-                {mode === "create" ? "게시글 작성" : "수정 완료"}
-              </button>
-            )}
+            <button
+              type="submit"
+              className="px-4 py-2 bg-green-700 text-white rounded-lg hover:bg-green-800"
+            >
+              게시글 작성
+            </button>
           </div>
         </form>
       </div>

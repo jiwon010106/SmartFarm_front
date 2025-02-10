@@ -2,11 +2,12 @@ import axios from "axios";
 
 /* ====== Common Post Request Function ====== */
 export async function postRequest(url, options) {
+  const token = getTokenWithExpiry();
   const defaultOptions = {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
-      Authorization: `Bearer ${localStorage.getItem("token")}`,
+      Authorization: token ? `Bearer ${token}` : "",
     },
     ...options,
   };
@@ -96,11 +97,12 @@ export async function postFormRequest(url, options) {
 
 /* ====== Common Put Request Function ====== */
 export async function putRequest(url, options) {
+  const token = getTokenWithExpiry();
   const defaultOptions = {
     method: "PUT",
     headers: {
       "Content-Type": "application/json",
-      Authorization: `Bearer ${localStorage.getItem("token")}`,
+      Authorization: token ? `Bearer ${token}` : "",
     },
     ...options,
   };
@@ -115,7 +117,14 @@ export async function putRequest(url, options) {
 
 /* ====== Common Patch Request Function ====== */
 export async function patchRequest(url, options) {
-  return await fetch(url, options).then((response) => {
+  const token = getTokenWithExpiry();
+  return await fetch(url, {
+    ...options,
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: token ? `Bearer ${token}` : "",
+    },
+  }).then((response) => {
     if (!response.ok) {
       throw new Error("Network response was not ok");
     }
@@ -125,6 +134,7 @@ export async function patchRequest(url, options) {
 
 /* ====== Common Delete Request Function ====== */
 export async function deleteRequest(url) {
+  const token = getTokenWithExpiry();
   const response = await fetch(url, {
     method: "DELETE",
     headers: {
@@ -200,4 +210,28 @@ export const getTop10Request = async (apiURL) => {
     console.error("TOP 10 데이터 요청 오류:", error);
     throw error;
   }
+};
+
+// 토큰 관리 함수 추가
+const getTokenWithExpiry = () => {
+  const token = localStorage.getItem("token");
+  if (!token) return null;
+
+  const tokenData = localStorage.getItem("tokenExpiry");
+  if (!tokenData) {
+    // 토큰은 있지만 만료시간이 없는 경우, 현재 시간 기준으로 만료시간 설정
+    const expiry = new Date().getTime() + 24 * 60 * 60 * 1000;
+    localStorage.setItem("tokenExpiry", expiry.toString());
+    return token;
+  }
+
+  const expiry = parseInt(tokenData);
+  const now = new Date().getTime();
+
+  if (now > expiry) {
+    localStorage.removeItem("token");
+    localStorage.removeItem("tokenExpiry");
+    return null;
+  }
+  return token;
 };

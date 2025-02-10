@@ -55,9 +55,9 @@ const Write = () => {
           </tr>
         </thead>
         <tbody>
-          {posts.map((post) => (
+          {posts.map((post, index) => (
             <tr
-              key={post.post_id}
+              key={`post-${post.post_id || index}`}
               onClick={() => handlePostClick(post.post_id)}
               className="border-b hover:bg-gray-50 cursor-pointer"
             >
