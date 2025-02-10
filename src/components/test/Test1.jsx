@@ -189,7 +189,7 @@ const Weather = () => {
   if (!weatherData) return <div>데이터가 없습니다.</div>;
 
   return (
-    <div className="p-4 max-w-4xl mx-auto bg-gray-400 rounded-lg">
+    <div className="p-4 max-w-4xl mx-auto bg-transparent rounded-lg">
       <h2 className="text-xl font-medium mb-4 text-black">주간예보</h2>
 
       {/* 전체 컨테이너에 동일한 width 적용 */}
@@ -219,9 +219,7 @@ const Weather = () => {
                       </span>
                     </div>
                     <div className="flex items-center gap-2">
-                      <span className="text-blue-500">
-                        {day.main.humidity}%
-                      </span>
+                      <span className="text-black">{day.main.humidity}%</span>
                       <span className="text-white">강수확률</span>
                     </div>
                   </div>

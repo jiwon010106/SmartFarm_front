@@ -2,7 +2,7 @@ import "./App.css";
 import React from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Home from "./components/common/Home";
-import Hearder from "./components/common/Header";
+import Header from "./components/common/Header";
 import Footer from "./components/common/Footer";
 import Register from "./components/login/Register";
 import Login from "./components/login/Login";
@@ -25,7 +25,7 @@ function App() {
     <Provider store={store}>
       <Router>
         <div className="App">
-          <Hearder />
+          <Header />
 
           <Routes>
             <Route path="/" element={<Home />} />
