@@ -27,7 +27,8 @@ import { checkLoginStatus, logout } from "./redux/slices/authslice";
 
 function App() {
   const dispatch = useDispatch();
-  const INACTIVE_TIMEOUT = 60 * 1000; // 1분으로 변경 (테스트용)
+  // const INACTIVE_TIMEOUT = 60 * 1000; // 1분으로 변경 (테스트용)
+  const INACTIVE_TIMEOUT = 2 * 60 * 60 * 1000; // 2시간으로 설정
 
   const performLogout = useCallback(() => {
     dispatch(logout());
