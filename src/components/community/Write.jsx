@@ -8,9 +8,8 @@ import {
 import WriteModal from "./WriteModal";
 import { useNavigate } from "react-router-dom";
 
-const Write = () => {
+const Write = ({ posts }) => {
   const dispatch = useDispatch();
-  const posts = useSelector(selectPosts);
   const loading = useSelector(selectLoading);
 
   const [selectedPost, setSelectedPost] = useState(null);

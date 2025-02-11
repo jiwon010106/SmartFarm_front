@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import { useSelector } from "react-redux";
 import Swal from "sweetalert2";
 import {
   getRequest,
@@ -23,7 +22,6 @@ const PostDetail = () => {
   const [comments, setComments] = useState([]); // 빈 배열로 초기화
   const [loading, setLoading] = useState(true); // 로딩 상태 추가
   const [newComment, setNewComment] = useState("");
-  const currentUserId = parseInt(localStorage.getItem("userId"));
   const [isEditing, setIsEditing] = useState(false);
   const [editingCommentId, setEditingCommentId] = useState(null);
   const [editedContent, setEditedContent] = useState("");

@@ -16,6 +16,7 @@ const Community = () => {
   const posts = useSelector(selectPosts);
   const loading = useSelector(selectLoading);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [searchTerm, setSearchTerm] = useState("");
 
   const fetchPosts = async () => {
     dispatch(getPostsStart());
@@ -38,6 +39,25 @@ const Community = () => {
     setIsModalOpen(false);
     fetchPosts(); // 모달이 닫힐 때 게시글 목록 새로고침
   };
+
+  // 검색된 게시물을 필터링하는 함수
+  const filteredPosts = posts.filter((post) => {
+    if (!post.title) return false;
+
+    const postTitle = post.title.toString().toLowerCase();
+    const postId = post.post_id ? post.post_id.toString() : ""; // post_id 사용
+    const searchQuery = searchTerm.toLowerCase();
+
+    // console.log("검색어:", searchTerm);
+    // console.log("게시물 post_id:", postId);
+    // console.log("게시물 제목:", post.title);
+    // console.log(
+    //   "포함 여부:",
+    //   postTitle.includes(searchQuery) || postId.includes(searchQuery)
+    // );
+
+    return postTitle.includes(searchQuery) || postId.includes(searchQuery);
+  });
 
   return (
     <div className="max-w-6xl mx-auto p-5">
@@ -66,6 +86,8 @@ const Community = () => {
           <input
             type="search"
             placeholder="Search"
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
             className="px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
           />
           <button
@@ -77,8 +99,8 @@ const Community = () => {
         </div>
       </div>
 
-      {/* 게시글 목록 컴포넌트 */}
-      <Write />
+      {/* Write 컴포넌트에 필터링된 게시물 전달 */}
+      <Write posts={filteredPosts} />
 
       {/* 새 게시글 작성 모달 */}
       <CreatePostModal isOpen={isModalOpen} onClose={handleModalClose} />
