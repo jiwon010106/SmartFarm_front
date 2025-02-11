@@ -7,7 +7,7 @@ import {
   useNavigate,
 } from "react-router-dom";
 import Home from "./components/common/Home";
-import Hearder from "./components/common/Header";
+import Header from "./components/common/Header";
 import Footer from "./components/common/Footer";
 import Register from "./components/login/Register";
 import Login from "./components/login/Login";
@@ -31,9 +31,9 @@ function App() {
 
   const performLogout = useCallback(() => {
     dispatch(logout());
-    localStorage.clear(); // 모든 localStorage 데이터 삭제
-    alert("자동 로그아웃 되었습니다."); // 사용자에게 알림
-    window.location.href = "/"; // navigate 대신 window.location.href 사용
+    localStorage.clear();
+    alert("자동 로그아웃 되었습니다.");
+    window.location.href = "/";
   }, [dispatch]);
 
   const handleUserActivity = useCallback(() => {
@@ -101,7 +101,7 @@ function App() {
   return (
     <Router>
       <div className="App">
-        <Hearder />
+        <Header />
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/pricingInformation" element={<PricingInformation />} />

@@ -8,6 +8,24 @@ const Test3 = () => {
   const images = useMemo(
     () => [
       {
+        src: "https://cdn.pixabay.com/photo/2016/09/21/04/46/barley-field-1684052_1280.jpg",
+        link: "/",
+        title: "AnI Farm",
+        content: (
+          <div className="absolute inset-0 flex flex-col items-center justify-center drop-shadow-[0_2px_2px_rgba(0,0,0,0.5)] text-white overflow-hidden">
+            <h1 className="text-4xl font-bold mb-4 text-shadow-lg z-10">
+              AnI Farm
+            </h1>
+            <p className="text-xl mb-4 text-shadow-lg z-10">
+              AI로 심고, 데이터로 키우는 당신을 위한 smart한 농사의 시작
+            </p>
+            <p className="text-l text-shadow-lg z-10">
+              지혜가 모이고 소통하는 공간, 함께 키워가는 AI 농업 커뮤니티
+            </p>
+          </div>
+        ),
+      },
+      {
         src: "http://www.cimon.co.kr/wp-content/uploads/2017/02/farm_02-e1486360904274.jpg",
         link: "/pricingInformation",
         title: "소비 트렌드",
@@ -111,43 +129,29 @@ const Test3 = () => {
   }, [activeIndex, images]);
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-green-400 to-green-200 flex items-center justify-center ">
-      <div className="text-center whitespace-nowrap overflow-hidden h-[80vh]">
-        <div className="mb-4">
-          <h2
-            style={{ fontFamily: "LemonMilk" }}
-            className="text-6xl hidden lg:block leading-tight"
-          >
-            AnIfarm
-          </h2>
-          <p className="text-base lg:text-lg tracking-tight hidden lg:block leading-relaxed">
-            사이트
-            <br />
-            소개
-            <br />글 입니다.
-          </p>
-        </div>
+    <div className="min-h-screen flex items-center justify-center">
+      <div className="text-center whitespace-nowrap overflow-hidden h-[95vh]">
         {images.map((image, index) => (
           <div
             key={index}
-            className={`accordion-item inline-block cursor-pointer rounded-[3vw] h-[60vh] mx-[1vw] bg-center bg-cover transition-transform duration-300 ease-out
-              ${activeIndex === index ? "z-10" : "z-0"}
-              hover:shadow-xl`}
+            className={`accordion-item relative inline-block cursor-pointer rounded-[3vw] h-[60vh] mx-[1vw] bg-center bg-cover transition-transform duration-300 ease-out
+              ${activeIndex === index ? "z-10" : "z-0"}`}
             style={{
               backgroundImage: `url(${image.src})`,
-              width: index === 0 ? "42vw" : "8vw", // 초기 상태 설정
-              backgroundSize: "75vh",
+              width: index === 0 ? "42vw" : "8vw",
+              backgroundSize: "cover",
               transform: `translateZ(0)`,
             }}
             onClick={() => handleClick(index)}
           >
-            <h3 className="absolute top-4 left-1/2 transform -translate-x-1/2 text-black-400 text-xl font-bold shadow-lg">
+            {image.content && activeIndex === index && image.content}
+            <h3 className="absolute top-4 left-1/2 transform -translate-x-1/2 text-white text-xl font-bold z-10 drop-shadow-[0_2px_2px_rgba(0,0,0,0.8)]">
               {image.title}
             </h3>
             {activeIndex === index && (
               <button
                 onClick={(e) => {
-                  e.stopPropagation(); // 부모 클릭 이벤트 전파 방지
+                  e.stopPropagation();
                   handleMoreClick(index);
                 }}
                 className="absolute bottom-4 left-1/2 transform -translate-x-1/2 bg-white text-black px-4 py-2 rounded"
