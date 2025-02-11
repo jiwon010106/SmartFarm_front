@@ -66,14 +66,14 @@ function App() {
 
       clearTimeout(inactivityTimeout);
       inactivityTimeout = setTimeout(autoLogout, INACTIVE_TIMEOUT);
-      console.log("활동 감지 - 새로운 타이머 설정");
+      // console.log("활동 감지 - 새로운 타이머 설정");
     };
 
     // 이벤트 핸들러
     const handleActivity = () => {
       const token = localStorage.getItem("token");
       if (token) {
-        console.log("사용자 활동 감지");
+        // console.log("사용자 활동 감지");
         handleUserActivity();
         resetInactivityTimer();
       }

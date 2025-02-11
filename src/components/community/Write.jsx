@@ -26,6 +26,18 @@ const Write = ({ posts }) => {
     dispatch(getPostsSuccess(updatedPosts));
   };
 
+  // 카테고리 매핑 함수 추가
+  const getCategoryName = (category) => {
+    const categories = {
+      general: "일반 토론",
+      food: "식물 재배",
+      indoor: "실내 식물",
+      pests: "병충해 관리",
+      hydroponic: "수경 재배",
+    };
+    return categories[category] || category;
+  };
+
   if (loading) {
     return <div className="text-center text-gray-600">로딩 중...</div>;
   }
@@ -61,7 +73,7 @@ const Write = ({ posts }) => {
               className="border-b hover:bg-gray-50 cursor-pointer"
             >
               <td className="px-6 py-4">{post.title}</td>
-              <td className="px-6 py-4">{post.category}</td>
+              <td className="px-6 py-4">{getCategoryName(post.category)}</td>
               <td className="px-6 py-4">{post.email}</td>
               <td className="px-6 py-4">
                 {new Date(post.date).toLocaleDateString()}

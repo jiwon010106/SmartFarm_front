@@ -177,7 +177,7 @@ const PostDetail = () => {
     }
   };
 
-  // 카테고리 매핑 함수 추가
+  // 카테고리 매핑 함수
   const getCategoryName = (category) => {
     const categories = {
       general: "일반 토론",
