@@ -14,41 +14,23 @@ import {
 
 const Weather = () => {
   const [weatherData, setWeatherData] = useState(null);
-  const [priceData, setPriceData] = useState({
-    current: {},
-    tomorrow: {},
-    weekly: []
-  });
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
   useEffect(() => {
     const fetchData = async () => {
       try {
+        setLoading(true);
         // 날씨 데이터 가져오기
         const weatherResponse = await axios.get(
           "http://localhost:8000/weather?city=Seoul"
         );
-        
-        // 가격 예측 데이터 가져오기
-        const priceResponse = await axios.get(
-          "http://localhost:8000/predictions/Seoul"
-        );
 
         console.log("날씨 데이터:", weatherResponse.data);
-        console.log("가격 예측 데이터:", priceResponse.data);
 
         if (weatherResponse.data.list) {
           const dailyData = processWeatherData(weatherResponse.data.list);
           setWeatherData(dailyData);
-        }
-        
-        if (priceResponse.data && !priceResponse.data.error) {
-          setPriceData({
-            current: priceResponse.data.current || {},
-            tomorrow: priceResponse.data.tomorrow || {},
-            weekly: priceResponse.data.weekly || []
-          });
         }
       } catch (err) {
         console.error("데이터 가져오기 오류:", err.response?.data || err.message);
@@ -240,95 +222,6 @@ const Weather = () => {
             })}
           </div>
         </div>
-      </div>
-
-      {/* 가격 예측 섹션 */}
-      <div className="mt-8">
-        <h2 className="text-xl font-medium mb-4 text-black">농산물 가격 예측</h2>
-        
-        {/* 현재/내일 가격 예측 */}
-        <div className="grid grid-cols-2 gap-4 mb-6">
-          {/* 현재 가격 */}
-          {priceData.current && Object.keys(priceData.current).length > 0 && (
-            <div className="bg-white rounded-xl p-4 shadow-sm">
-              <h3 className="text-lg font-medium mb-2">현재 예상 가격</h3>
-              <div className="grid grid-cols-2 gap-2">
-                {Object.entries(priceData.current)
-                  .filter(([key]) => key.endsWith('_price'))
-                  .map(([key, value]) => {
-                    const itemName = key.replace('_price', '');
-                    const r2 = priceData.current[`${itemName}_r2`];
-                    return (
-                      <div key={key} className="flex justify-between">
-                        <span>{itemName}:</span>
-                        <span>{typeof value === 'number' ? value.toLocaleString() : value}원</span>
-                        {r2 && <span className="text-sm text-gray-500">(정확도: {(r2 * 100).toFixed(1)}%)</span>}
-                      </div>
-                    );
-                  })}
-              </div>
-            </div>
-          )}
-
-          {/* 내일 가격 */}
-          {priceData.tomorrow && Object.keys(priceData.tomorrow).length > 0 && (
-            <div className="bg-white rounded-xl p-4 shadow-sm">
-              <h3 className="text-lg font-medium mb-2">내일 예상 가격</h3>
-              <div className="grid grid-cols-2 gap-2">
-                {Object.entries(priceData.tomorrow)
-                  .filter(([key]) => key.endsWith('_price'))
-                  .map(([key, value]) => {
-                    const itemName = key.replace('_price', '');
-                    const r2 = priceData.tomorrow[`${itemName}_r2`];
-                    return (
-                      <div key={key} className="flex justify-between">
-                        <span>{itemName}:</span>
-                        <span>{typeof value === 'number' ? value.toLocaleString() : value}원</span>
-                        {r2 && <span className="text-sm text-gray-500">(정확도: {(r2 * 100).toFixed(1)}%)</span>}
-                      </div>
-                    );
-                  })}
-              </div>
-            </div>
-          )}
-        </div>
-
-        {/* 주간 가격 예측 */}
-        {priceData.weekly && priceData.weekly.length > 0 && (
-          <div className="bg-white rounded-xl p-4 shadow-sm">
-            <h3 className="text-lg font-medium mb-2">주간 가격 예측</h3>
-            <div className="overflow-x-auto">
-              <table className="min-w-full">
-                <thead>
-                  <tr>
-                    <th className="px-4 py-2">날짜</th>
-                    {Object.keys(priceData.weekly[0] || {})
-                      .filter(key => key.endsWith('_price'))
-                      .map(key => (
-                        <th key={key} className="px-4 py-2">
-                          {key.replace('_price', '')}
-                        </th>
-                      ))}
-                  </tr>
-                </thead>
-                <tbody>
-                  {priceData.weekly.map((day, index) => (
-                    <tr key={index}>
-                      <td className="px-4 py-2">{index + 1}일 후</td>
-                      {Object.entries(day)
-                        .filter(([key]) => key.endsWith('_price'))
-                        .map(([key, value]) => (
-                          <td key={key} className="px-4 py-2">
-                            {typeof value === 'number' ? value.toLocaleString() : value}원
-                          </td>
-                        ))}
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-          </div>
-        )}
       </div>
     </div>
   );
