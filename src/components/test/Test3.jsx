@@ -38,7 +38,7 @@ const Test3 = () => {
       {
         src: "https://img.etnews.com/photonews/2208/1564644_20220824165655_096_0003.jpg",
         link: "/pests",
-        title: "육성법",
+        title: "병충해",
       },
       {
         src: "https://cdn.knupresscenter.com/news/photo/202203/20689_7427_3041.jpg",
