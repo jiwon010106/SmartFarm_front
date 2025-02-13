@@ -21,7 +21,7 @@ const Community = () => {
   const fetchPosts = async () => {
     dispatch(getPostsStart());
     try {
-      const response = await getRequest("http://localhost:8000/api/write");
+      const response = await getRequest("write");
       dispatch(getPostsSuccess(response.data));
     } catch (err) {
       console.error("Error fetching posts:", err);

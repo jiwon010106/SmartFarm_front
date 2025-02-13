@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import axios from "axios";
+import { postRequest } from "../../../utils/requestMethods";
 import mediLogo from "../../assets/medi_logo.png";
 import Swal from "sweetalert2";
 
@@ -13,21 +13,21 @@ const FindPwd = () => {
     setIsLoading(true);
 
     try {
-      const response = await axios.post("http://localhost:8000/auth/find_pwd", {
-        email,
+      const response = await postRequest("auth/find_pwd", {
+        body: JSON.stringify({ email }),
       });
 
       await Swal.fire({
         icon: "success",
         title: "이메일 발송 완료",
-        text: response.data.message,
+        text: response.message,
       });
       setEmail("");
     } catch (error) {
       await Swal.fire({
         icon: "error",
         title: "오류 발생",
-        text: error.response?.data?.error || "서버와 연결할 수 없습니다.",
+        text: error.message || "서버와 연결할 수 없습니다.",
       });
     } finally {
       setIsLoading(false);

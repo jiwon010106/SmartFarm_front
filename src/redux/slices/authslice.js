@@ -53,27 +53,28 @@ export const fetchPostEmailVerificationData = createAsyncThunk(
 );
 
 // 로그인 요청
-const postLoginThunk = (actionType, apiURL) => {
-  return createAsyncThunk(actionType, async (postData, { rejectWithValue }) => {
-    // console.log(postData);
+export const loginUser = createAsyncThunk(
+  "auth/login",
+  async (credentials, { rejectWithValue }) => {
     try {
-      const options = {
-        body: JSON.stringify(postData), // 표준 JSON 문자열로 변환 json 형식일 때
-        // method: "POST",
-        // body: postData, // json 형식이 아닐 때
-      };
-      const response = await postRequest(apiURL, options);
-      return response; // { status, data } 형태로 반환
-    } catch (error) {
-      // 에러 시 상태 코드와 메시지를 포함한 값을 rejectWithValue로 전달
-      return rejectWithValue(error);
-    }
-  });
-};
+      console.log("로그인 요청:", credentials);
+      const response = await postRequest("auth/login", {
+        body: JSON.stringify(credentials),
+      });
+      console.log("로그인 응답:", response);
 
-export const fetchPostLoginData = postLoginThunk(
-  "fetchPostLogin", // action type
-  POST_LOGIN_API_URL // 요청 url
+      // response.data가 있고 status가 201인 경우 성공
+      if (response.status === 201 && response.data) {
+        localStorage.setItem("token", response.data.token);
+        return response.data;
+      }
+
+      return rejectWithValue("로그인 실패");
+    } catch (error) {
+      console.error("로그인 에러:", error);
+      return rejectWithValue(error.message || "로그인 실패");
+    }
+  }
 );
 
 // 회원정보 수정 요청
@@ -143,6 +144,9 @@ const authSlice = createSlice({
     deleteAuthData: null,
     updateAuthData: null,
     loginExpireTime: null,
+    loading: false,
+    user: null,
+    isAuthenticated: false,
   },
   reducers: {
     verifyEmail: (state, action) => {
@@ -199,14 +203,24 @@ const authSlice = createSlice({
       .addCase(fetchPostAuthData.fulfilled, handleFulfilled("postAuthData"))
       .addCase(fetchPostAuthData.rejected, handleRejected)
 
-      .addCase(fetchPostLoginData.fulfilled, (state, action) => {
+      .addCase(loginUser.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(loginUser.fulfilled, (state, action) => {
+        state.loading = false;
+        state.user = action.payload;
+        state.isAuthenticated = true;
         state.postLoginData = action.payload;
         const expireTime = new Date();
         expireTime.setHours(expireTime.getHours() + 24);
         state.loginExpireTime = expireTime.getTime();
         localStorage.setItem("loginExpireTime", expireTime.getTime());
       })
-      .addCase(fetchPostLoginData.rejected, handleRejected)
+      .addCase(loginUser.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+      })
 
       .addCase(fetchPostEmailVerificationData.fulfilled, (state, action) => {
         state.verificationCode = action.payload;
