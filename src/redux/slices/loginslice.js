@@ -6,6 +6,7 @@ const initialToken = localStorage.getItem("token");
 const initialState = {
   token: initialToken || null,
   user: initialToken ? jwtDecode(initialToken) : null,
+  error: null,
 };
 
 const loginSlice = createSlice({
@@ -13,13 +14,15 @@ const loginSlice = createSlice({
   initialState,
   reducers: {
     setToken: (state, action) => {
-      state.token = action.payload; // action으로 전달받은 결과값
+      state.token = action.payload;
       state.user = jwtDecode(action.payload);
+      state.error = null;
       localStorage.setItem("token", action.payload);
     },
     clearToken: (state) => {
       state.token = null;
       state.user = null;
+      state.error = null;
       localStorage.removeItem("token");
     },
   },

@@ -1,8 +1,8 @@
 import React, { useState } from "react";
 import { useDispatch } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
-import { fetchPostLoginData } from "../../redux/slices/authslice.js";
-import { setToken } from "../../redux/slices/loginslice.js";
+import { loginUser } from "../../../redux/slices/authslice";
+import { setToken } from "../../../redux/slices/loginslice";
 import Swal from "sweetalert2";
 
 const Login = () => {
@@ -22,10 +22,8 @@ const Login = () => {
   };
 
   const handleSubmit = async (e) => {
-    e.preventDefault(); // 쿼리가 잡히지 않게(경로 표시X)
-
-    // id 값을 로그로 출력
-    // console.log(value.id);
+    e.preventDefault();
+    console.log("로그인 시도:", value);
 
     if (value.email === "" || value.password === "") {
       await Swal.fire({
@@ -37,14 +35,13 @@ const Login = () => {
     }
 
     try {
-      const response = await dispatch(fetchPostLoginData(value)).unwrap();
-      // console.log(response);
-      if (response.status === 201) {
-        // alert(response.data.msg)
-        // localStorage.setItem('token', response.data.token) // 로컬 스토리지에 저장 - localStorage.setItem('저장할 이름', 저장할 값)
-        // getItem('저장된 이름(key)') - 저장된 이름의 값을 가져옴
-        // removeItem('저장된 이름(key)'): 저장된 이름의 값을 삭제
-        dispatch(setToken(response.data.token));
+      console.log("loginUser 디스패치 전");
+      const response = await dispatch(loginUser(value)).unwrap();
+      console.log("로그인 응답 데이터:", response);
+
+      // response에 token이 있는지 확인
+      if (response && response.token) {
+        dispatch(setToken(response.token));
         await Swal.fire({
           icon: "success",
           text: "로그인에 성공했습니다.",
@@ -54,19 +51,19 @@ const Login = () => {
         navigator("/");
         return;
       }
-      if (response.data.success === false) {
-        await Swal.fire({
-          icon: "error",
-          title: "로그인에 실패했습니다.",
-          text: response.data.msg,
-        });
-        return;
-      }
+
+      // 토큰이 없는 경우
+      await Swal.fire({
+        icon: "error",
+        title: "로그인에 실패했습니다.",
+        text: "이메일 또는 비밀번호를 확인해주세요.",
+      });
     } catch (error) {
+      console.error("로그인 에러:", error);
       await Swal.fire({
         icon: "error",
         title: "오류 발생",
-        text: error.msg,
+        text: error || "로그인 처리 중 오류가 발생했습니다.",
       });
     }
   };

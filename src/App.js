@@ -10,7 +10,7 @@ import Home from "./components/common/Home";
 import Header from "./components/common/Header";
 import Footer from "./components/common/Footer";
 import Register from "./components/login/Register";
-import Login from "./components/login/Login";
+import Login from "./components/login/details/Login";
 import Mypage from "./components/login/Mypage";
 import PricingInformation from "./components/PricingInformation/PricingInformation";
 import WeatherItem from "./components/Item/WeatherItem";

@@ -12,15 +12,9 @@ import { jwtDecode } from "jwt-decode";
 const PostDetail = () => {
   const { postId } = useParams();
   const navigate = useNavigate();
-  const [post, setPost] = useState({
-    title: "",
-    content: "",
-    category: "", // 초기값을 빈 문자열로 설정
-    email: "",
-    date: new Date(),
-  });
-  const [comments, setComments] = useState([]); // 빈 배열로 초기화
-  const [loading, setLoading] = useState(true); // 로딩 상태 추가
+  const [post, setPost] = useState(null);
+  const [comments, setComments] = useState([]);
+  const [loading, setLoading] = useState(true);
   const [newComment, setNewComment] = useState("");
   const [isEditing, setIsEditing] = useState(false);
   const [editingCommentId, setEditingCommentId] = useState(null);
@@ -28,39 +22,77 @@ const PostDetail = () => {
   const [currentUser, setCurrentUser] = useState(null);
 
   useEffect(() => {
+    console.log("useEffect 실행, postId:", postId);
     fetchPostAndComments();
-    // 토큰에서 사용자 정보 가져오기
+
     const token = localStorage.getItem("token");
+    console.log("현재 토큰:", token);
+
     if (token) {
       try {
         const decoded = jwtDecode(token);
+        console.log("디코딩된 토큰:", decoded);
         setCurrentUser(decoded);
       } catch (error) {
         console.error("토큰 디코딩 실패:", error);
-        localStorage.removeItem("token"); // 잘못된 토큰 제거
+        localStorage.removeItem("token");
       }
     }
   }, [postId]);
 
   const fetchPostAndComments = async () => {
-    setLoading(true);
     try {
-      const postResponse = await getRequest(
-        `http://localhost:8000/api/write/${postId}`
-      );
-      const commentsResponse = await getRequest(
-        `http://localhost:8000/api/comments/${postId}`
-      );
+      console.log("게시물 ID:", postId);
+      // 게시물 데이터 가져오기
+      const postResponse = await getRequest(`write/${postId}`);
+      console.log("게시물 서버 응답:", postResponse);
 
-      setPost(postResponse.data);
-      // commentsResponse가 배열인지 확인하고 설정
-      setComments(Array.isArray(commentsResponse) ? commentsResponse : []);
+      if (postResponse.success && postResponse.data) {
+        setPost(postResponse.data);
 
-      // console.log("Fetched comments:", commentsResponse); // 디버깅용
+        // 댓글 데이터 따로 가져오기
+        try {
+          const commentsResponse = await getRequest(`comments/${postId}`);
+          console.log("댓글 서버 응답:", commentsResponse);
+
+          // 댓글 응답이 배열인 경우 직접 사용
+          if (Array.isArray(commentsResponse)) {
+            setComments(commentsResponse);
+            console.log("설정된 댓글:", commentsResponse);
+          } else if (
+            commentsResponse.success &&
+            Array.isArray(commentsResponse.data)
+          ) {
+            // success 구조인 경우
+            setComments(commentsResponse.data);
+            console.log("설정된 댓글:", commentsResponse.data);
+          } else {
+            console.log("댓글이 없습니다");
+            setComments([]);
+          }
+        } catch (error) {
+          console.error("댓글 로딩 실패:", error);
+          setComments([]);
+        }
+      } else {
+        console.error("게시물 데이터가 없습니다:", postResponse);
+        Swal.fire({
+          icon: "error",
+          title: "데이터 로드 실패",
+          text: "게시물을 불러올 수 없습니다.",
+        }).then(() => {
+          navigate("/community");
+        });
+      }
     } catch (error) {
       console.error("데이터 로딩 실패:", error);
-      Swal.fire("오류", "게시글을 불러오는데 실패했습니다.", "error");
-      setComments([]); // 에러 시 빈 배열로 설정
+      Swal.fire({
+        icon: "error",
+        title: "오류 발생",
+        text: "게시물을 불러오는 중 오류가 발생했습니다.",
+      }).then(() => {
+        navigate("/community");
+      });
     } finally {
       setLoading(false);
     }
@@ -80,7 +112,7 @@ const PostDetail = () => {
 
     if (result.isConfirmed) {
       try {
-        await deleteRequest(`http://localhost:8000/api/write/${postId}`);
+        await deleteRequest(`write/${postId}`);
         Swal.fire(
           "삭제 완료!",
           "게시글이 성공적으로 삭제되었습니다.",
@@ -99,16 +131,18 @@ const PostDetail = () => {
     if (!newComment.trim()) return;
 
     try {
-      const response = await postRequest(`http://localhost:8000/api/comments`, {
+      console.log("댓글 작성 요청:", { post_id: postId, content: newComment });
+      const response = await postRequest(`comments`, {
         body: JSON.stringify({
           post_id: postId,
           content: newComment,
         }),
       });
+      console.log("댓글 작성 응답:", response);
 
-      if (response.status === 200 || response.status === 201) {
+      if (response.success) {
         setNewComment("");
-        await fetchPostAndComments(); // await 추가하여 데이터 새로고침 보장
+        await fetchPostAndComments(); // 댓글 목록 새로고침
         Swal.fire("성공", "댓글이 작성되었습니다.", "success");
       }
     } catch (error) {
@@ -117,42 +151,65 @@ const PostDetail = () => {
     }
   };
 
-  // 게시글 수정 함수
   const handleEditPost = async () => {
     try {
-      await putRequest(`http://localhost:8000/api/write/${postId}`, {
-        body: JSON.stringify(post),
+      console.log("게시글 수정 요청:", {
+        title: post.title,
+        content: post.content,
       });
-      await Swal.fire({
-        title: "성공!",
-        text: "게시글이 성공적으로 수정되었습니다.",
-        icon: "success",
+
+      // URL 경로 수정: /api/write/22 형식으로 변경
+      const response = await putRequest(`write/${postId}`, {
+        body: JSON.stringify({
+          title: post.title,
+          content: post.content,
+        }),
       });
-      setIsEditing(false);
-      fetchPostAndComments();
+
+      console.log("게시글 수정 응답:", response);
+
+      if (response.success) {
+        setIsEditing(false);
+        await Swal.fire({
+          icon: "success",
+          title: "수정 완료",
+          text: "게시글이 성공적으로 수정되었습니다.",
+        });
+        // 수정된 내용 새로고침
+        await fetchPostAndComments();
+      } else {
+        throw new Error("게시글 수정에 실패했습니다.");
+      }
     } catch (error) {
       console.error("게시글 수정 실패:", error);
-      Swal.fire("오류", "게시글 수정에 실패했습니다.", "error");
+      await Swal.fire({
+        icon: "error",
+        title: "오류 발생",
+        text: "게시글 수정 중 오류가 발생했습니다.",
+      });
     }
   };
 
-  // 댓글 수정 함수
   const handleEditComment = async (commentId) => {
     try {
-      await putRequest(`http://localhost:8000/api/comments/${commentId}`, {
+      console.log("댓글 수정 요청:", { commentId, content: editedContent });
+      const response = await putRequest(`comments/${commentId}`, {
         body: JSON.stringify({ content: editedContent }),
       });
-      setEditingCommentId(null);
-      setEditedContent("");
-      fetchPostAndComments();
-      Swal.fire("성공", "댓글이 수정되었습니다.", "success");
+      console.log("댓글 수정 응답:", response);
+
+      if (response.success) {
+        setEditingCommentId(null);
+        setEditedContent("");
+        await fetchPostAndComments(); // 댓글 목록 새로고침
+        Swal.fire("성공", "댓글이 수정되었습니다.", "success");
+      }
     } catch (error) {
       console.error("댓글 수정 실패:", error);
       Swal.fire("오류", "댓글 수정에 실패했습니다.", "error");
     }
   };
 
-  // 댓글 삭제 함수
   const handleDeleteComment = async (commentId) => {
     const result = await Swal.fire({
       title: "정말 삭제하시겠습니까?",
@@ -167,9 +224,14 @@ const PostDetail = () => {
 
     if (result.isConfirmed) {
       try {
-        await deleteRequest(`http://localhost:8000/api/comments/${commentId}`);
-        fetchPostAndComments();
-        Swal.fire("삭제 완료!", "댓글이 삭제되었습니다.", "success");
+        console.log("댓글 삭제 요청:", commentId);
+        const response = await deleteRequest(`comments/${commentId}`);
+        console.log("댓글 삭제 응답:", response);
+
+        if (response.success) {
+          await fetchPostAndComments(); // 댓글 목록 새로고침
+          Swal.fire("삭제 완료!", "댓글이 삭제되었습니다.", "success");
+        }
       } catch (error) {
         console.error("댓글 삭제 실패:", error);
         Swal.fire("오류", "댓글 삭제에 실패했습니다.", "error");
@@ -177,7 +239,6 @@ const PostDetail = () => {
     }
   };
 
-  // 카테고리 매핑 함수
   const getCategoryName = (category) => {
     const categories = {
       general: "일반 토론",
@@ -189,21 +250,20 @@ const PostDetail = () => {
     return categories[category] || category;
   };
 
-  // 게시글 작성자 확인 함수
   const isPostAuthor = () => {
     return currentUser && post.user_id === currentUser.id;
   };
 
-  // 댓글 작성자 확인 함수
   const isCommentAuthor = (comment) => {
     return currentUser && comment.user_id === currentUser.id;
   };
 
-  if (loading) return <div className="text-center py-8">로딩 중...</div>;
+  if (loading || !post) {
+    return <div className="text-center py-8">로딩 중...</div>;
+  }
 
   return (
     <div className="container mx-auto p-6 max-w-4xl">
-      {/* 게시글 내용 */}
       <div className="bg-white rounded-lg shadow-md p-6 mb-6">
         <div className="flex justify-between items-center mb-4">
           {isEditing ? (
@@ -275,11 +335,8 @@ const PostDetail = () => {
         )}
       </div>
 
-      {/* 댓글 섹션 */}
       <div className="bg-white rounded-lg shadow-md p-6">
         <h2 className="text-xl font-bold mb-4">댓글</h2>
-
-        {/* 댓글 작성 폼 */}
         <form onSubmit={handleCommentSubmit} className="mb-6">
           <textarea
             value={newComment}
@@ -295,8 +352,6 @@ const PostDetail = () => {
             댓글 작성
           </button>
         </form>
-
-        {/* 댓글 목록 */}
         <div className="space-y-4">
           {comments && comments.length > 0 ? (
             comments.map((comment) => (

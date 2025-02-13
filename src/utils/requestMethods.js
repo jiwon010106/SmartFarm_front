@@ -1,5 +1,9 @@
 import axios from "axios";
 
+// BASE_URL 설정
+const BASE_URL = "http://localhost:9000/api/";
+const AUTH_URL = "http://localhost:9000/auth/"; // auth 요청을 위한 URL 추가
+
 /* ====== Common Post Request Function ====== */
 export async function postRequest(url, options) {
   const token = getTokenWithExpiry();
@@ -13,7 +17,11 @@ export async function postRequest(url, options) {
   };
 
   try {
-    const response = await fetch(url, defaultOptions);
+    // auth 요청인 경우 AUTH_URL 사용, 그 외에는 BASE_URL 사용
+    const baseUrl = url.startsWith("auth/") ? AUTH_URL : BASE_URL;
+    const fullUrl = `${baseUrl}${url.replace("auth/", "")}`;
+
+    const response = await fetch(fullUrl, defaultOptions);
     const data = await response.json();
 
     if (!response.ok) {
@@ -152,21 +160,23 @@ export async function deleteRequest(url) {
 
 /* ====== Common GET Request Function ====== */
 export async function getRequest(url) {
+  const token = getTokenWithExpiry();
+  console.log("요청 URL:", `${BASE_URL}${url}`); // 전체 URL 확인
+  console.log("요청 헤더의 토큰:", token); // 토큰 확인
+
   try {
-    const response = await fetch(url, {
+    const response = await fetch(`${BASE_URL}${url}`, {
+      method: "GET",
       headers: {
         "Content-Type": "application/json",
-        Authorization: `Bearer ${localStorage.getItem("token")}`,
+        Authorization: token ? `Bearer ${token}` : "",
       },
     });
 
-    if (!response.ok) {
-      const errorData = await response.json();
-      console.error("응답 에러:", errorData);
-      throw new Error(errorData.message || "서버 요청 실패");
-    }
-
+    console.log("서버 응답 상태:", response.status); // 응답 상태 확인
     const data = await response.json();
+    console.log("서버 응답 데이터:", data); // 응답 데이터 확인
+
     return data;
   } catch (error) {
     console.error("요청 처리 중 오류 발생:", error);
@@ -174,8 +184,18 @@ export async function getRequest(url) {
   }
 }
 
-// axios 인스턴스 생성
+// axios 인스턴스도 수정
 const instance = axios.create({
+  baseURL: BASE_URL,
+  timeout: 5000,
+  headers: {
+    "Content-Type": "application/json",
+  },
+});
+
+// auth 요청을 위한 별도의 axios 인스턴스
+const authInstance = axios.create({
+  baseURL: AUTH_URL,
   timeout: 5000,
   headers: {
     "Content-Type": "application/json",

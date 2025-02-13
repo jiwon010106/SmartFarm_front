@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
-import axios from "axios";
+import { postRequest } from "../../../utils/requestMethods";
 import mediLogo from "../../assets/medi_logo.png";
 import Swal from "sweetalert2";
 
@@ -49,18 +49,17 @@ const ResetPwd = () => {
     setIsLoading(true);
 
     try {
-      const response = await axios.post(
-        "http://localhost:8000/auth/reset_pwd",
-        {
+      const response = await postRequest("auth/reset_pwd", {
+        body: JSON.stringify({
           token,
           newPassword: passwords.password,
-        }
-      );
+        }),
+      });
 
       await Swal.fire({
         icon: "success",
         title: "비밀번호 변경 완료",
-        text: response.data.message,
+        text: response.message,
       });
 
       setTimeout(() => navigator("/login"), 2000);
@@ -68,7 +67,7 @@ const ResetPwd = () => {
       await Swal.fire({
         icon: "error",
         title: "비밀번호 변경 실패",
-        text: error.response?.data?.error || "비밀번호 재설정에 실패했습니다.",
+        text: error.message || "비밀번호 재설정에 실패했습니다.",
       });
     } finally {
       setIsLoading(false);

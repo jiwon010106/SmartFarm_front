@@ -21,12 +21,9 @@ const CreatePostModal = ({ isOpen, onClose }) => {
     dispatch(createPostStart());
 
     try {
-      const response = await postMyMediRequest(
-        "http://localhost:8000/api/write/create",
-        {
-          body: JSON.stringify(postData),
-        }
-      );
+      const response = await postMyMediRequest("write/create", {
+        body: JSON.stringify(postData),
+      });
 
       if (response.status === 201) {
         dispatch(createPostSuccess(response.data));

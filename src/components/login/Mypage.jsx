@@ -1,9 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import axios from "axios";
+import { getRequest } from "../../utils/requestMethods";
 import { FaUser, FaEnvelope, FaCalendar } from "react-icons/fa";
-import { POST_MYPAGE_API_URL } from "../../utils/apiurl";
 
 const Mypage = () => {
   const navigate = useNavigate();
@@ -39,11 +38,7 @@ const Mypage = () => {
 
     const fetchUserInfo = async () => {
       try {
-        const response = await axios.get(POST_MYPAGE_API_URL, {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        });
+        const response = await getRequest("mypage");
         setUserInfo(response.data);
         setLoading(false);
       } catch (err) {
