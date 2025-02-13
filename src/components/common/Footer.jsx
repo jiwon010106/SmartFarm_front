@@ -3,15 +3,15 @@ import AnifarmLogo from "../../assets/main/aniform.png";
 
 const Footer = () => {
   const navigateToTest1 = () => {
-    window.location.href = "/test1";
+    window.location.href = "/Test1";
   };
 
   const navigateToTest2 = () => {
-    window.location.href = "/test2";
+    window.location.href = "/Test2";
   };
 
   const navigateToTest3 = () => {
-    window.location.href = "/test3";
+    window.location.href = "/Test3";
   };
 
   return (

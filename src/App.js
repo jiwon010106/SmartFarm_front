@@ -13,17 +13,20 @@ import Register from "./components/login/Register";
 import Login from "./components/login/Login";
 import Mypage from "./components/login/Mypage";
 import PricingInformation from "./components/PricingInformation/PricingInformation";
-import Test1 from "./components/test/Test1";
-import Test2 from "./components/test/Test2";
-import Test3 from "./components/test/Test3";
-import Community from "./components/community/Community";
-import SalsesInformation from "./components/SalsesInformation/SalsesInformation";
-import Pests from "./components/pests/Pests";
+import WeatherItem from "./components/Item/WeatherItem";
+import PricePredictionItem from "./components/Item/PricePredictionItem";
+import AccordionItem from "./components/Item/AccordionItem";
+import Community from "./components/community/Community"; 
+import SalesInformation from "./components/SalesInformation/SalesInformation";
+import Pests from "./components/pests/Pests"; 
 import TrainingMethod from "./components/trainingMethod/TrainingMethod";
 import PostDetail from "./components/community/PostDetail";
 import Write from "./components/community/Write";
 import { useDispatch } from "react-redux";
 import { checkLoginStatus, logout } from "./redux/slices/authslice";
+import Test3 from "./components/test/Test3";
+import Test2 from "./components/test/Test2";
+import Test1 from "./components/test/Test1";
 
 function App() {
   const dispatch = useDispatch();
@@ -110,14 +113,17 @@ function App() {
           <Route path="/Community/:postId" element={<PostDetail />} />
           <Route path="/Community/write" element={<Write />} />
           <Route path="/register" element={<Register />} />
-          <Route path="/sellInformation" element={<SalsesInformation />} />
+          <Route path="/sellInformation" element={<SalesInformation />} />
           <Route path="/pests" element={<Pests />} />
           <Route path="/login" element={<Login />} />
           <Route path="/mypage" element={<Mypage />} />
           <Route path="/trainingMethod" element={<TrainingMethod />} />
-          <Route path="/test1" element={<Test1 />} />
-          <Route path="/test2" element={<Test2 />} />
-          <Route path="/test3" element={<Test3 />} />
+          <Route path="/WeatherItem" element={<WeatherItem />} />
+          <Route path="/PricePredictionItem" element={<PricePredictionItem />} />
+          <Route path="/AccordionItem" element={<AccordionItem />} />
+          <Route path="/Test1" element={<Test1 />} />
+          <Route path="/Test2" element={<Test2 />} />
+          <Route path="/Test3" element={<Test3 />} />
         </Routes>
         <Footer />
       </div>

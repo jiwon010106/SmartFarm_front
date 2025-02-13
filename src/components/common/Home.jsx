@@ -2,10 +2,11 @@ import React, { useEffect, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { createTop5Chart } from "../../data/createTop10Chart";
 import { fetchGetTop5Data } from "../../redux/slices/apiSlice";
-import { Link } from "react-router-dom";
+import AccordionItem from "../Item/AccordionItem";
+import WeatherItem from "../Item/WeatherItem";
+
+// import { Link } from "react-router-dom";
 // import landingImg from "../../assets/main/mainlanding.jpg";
-import Test3 from "../test/Test3";
-import Test1 from "../test/Test1";
 
 const Home = () => {
   const chartRef = useRef(null);
@@ -30,14 +31,15 @@ const Home = () => {
   return (
     <div className="w-full">
       {/* 아코디안 아이템 */}
-      <Test3 />
+      <AccordionItem />
       <div className="relative">
+      <div className="absolute top-0 left-0">
         {/* 날씨정보 API */}
         <div className="flex justify-center items-center relative max-h-[600px] min-h-[300px]">
           <div className="absolute opacity-30 overlay w-full h-full bg-transparent left-0 top-0"></div>
           <div className="flex w-full h-full text-white rounded-lg p-4">
             <div id="top5-chart" ref={chartRef} />
-            <Test1 />
+            <WeatherItem />
           </div>
         </div>
         <div className="container">
@@ -48,6 +50,7 @@ const Home = () => {
           /> */}
           <div className="w-[500px] h-[420px] text-white rounded-lg p-4"></div>
         </div>
+      </div>
       </div>
     </div>
   );
