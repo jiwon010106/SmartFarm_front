@@ -51,7 +51,7 @@ const Footer = () => {
         {/* 저작권 정보 */}
         <div className="py-1 md:py-4 text-center">
           <p className="text-xs md:text-sm text-gray-500">
-            Copyright © 2024 AnIfarmAll rights reserved.
+            Copyright © 2025 AnIfarmAll rights reserved.
           </p>
         </div>
       </div>
