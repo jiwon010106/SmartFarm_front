@@ -1,7 +1,7 @@
 import axios from "axios";
 
 // BASE_URL 설정
-const BASE_URL = "http://localhost:9000/api/";
+const BASE_URL = "http://localhost:9000/api/"; // 서버 API 주소로 수정
 const AUTH_URL = "http://localhost:9000/auth/"; // auth 요청을 위한 URL 추가
 
 /* ====== Common Post Request Function ====== */
@@ -104,24 +104,30 @@ export async function postFormRequest(url, options) {
 }
 
 /* ====== Common Put Request Function ====== */
-export async function putRequest(url, options) {
+export const putRequest = async (url, options = {}) => {
   const token = getTokenWithExpiry();
-  const defaultOptions = {
-    method: "PUT",
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: token ? `Bearer ${token}` : "",
-    },
-    ...options,
-  };
+  console.log("PUT 요청 URL:", `${BASE_URL}${url}`); // URL 확인용 로그
 
-  const response = await fetch(url, defaultOptions);
-  if (!response.ok) {
-    const errorData = await response.json();
-    throw new Error(errorData.message || "Network response was not ok");
+  try {
+    const response = await fetch(`${BASE_URL}${url}`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: token ? `Bearer ${token}` : "",
+      },
+      ...options,
+    });
+
+    console.log("PUT 요청 응답 상태:", response.status); // 응답 상태 확인
+    const data = await response.json();
+    console.log("PUT 요청 응답 데이터:", data); // 응답 데이터 확인
+
+    return data;
+  } catch (error) {
+    console.error("PUT 요청 실패:", error);
+    throw error;
   }
-  return response.json();
-}
+};
 
 /* ====== Common Patch Request Function ====== */
 export async function patchRequest(url, options) {
@@ -141,22 +147,29 @@ export async function patchRequest(url, options) {
 }
 
 /* ====== Common Delete Request Function ====== */
-export async function deleteRequest(url) {
+export const deleteRequest = async (url) => {
   const token = getTokenWithExpiry();
-  const response = await fetch(url, {
-    method: "DELETE",
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${localStorage.getItem("token")}`,
-    },
-  });
+  console.log("DELETE 요청 URL:", `${BASE_URL}${url}`);
 
-  if (!response.ok) {
-    const errorData = await response.json();
-    throw new Error(errorData.message || "Network response was not ok");
+  try {
+    const response = await fetch(`${BASE_URL}${url}`, {
+      method: "DELETE",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: token ? `Bearer ${token}` : "",
+      },
+    });
+
+    console.log("DELETE 요청 응답 상태:", response.status);
+    const data = await response.json();
+    console.log("DELETE 요청 응답 데이터:", data);
+
+    return data;
+  } catch (error) {
+    console.error("DELETE 요청 실패:", error);
+    throw error;
   }
-  return response.json();
-}
+};
 
 /* ====== Common GET Request Function ====== */
 export async function getRequest(url) {
