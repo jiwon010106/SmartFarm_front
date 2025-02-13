@@ -80,7 +80,7 @@ export const fetchComments = (postId) => async (dispatch) => {
   try {
     dispatch(setLoading(true));
     const response = await getRequest(`comments/${postId}`);
-    console.log("댓글 조회 응답:", response);
+    // console.log("댓글 조회 응답:", response);
 
     if (Array.isArray(response)) {
       dispatch(setComments(response));
@@ -131,7 +131,7 @@ export const deleteComment = (commentId) => async (dispatch) => {
   try {
     dispatch(setLoading(true));
     const response = await deleteRequest(`comments/${commentId}`);
-    console.log("댓글 삭제 응답:", response);
+    // console.log("댓글 삭제 응답:", response);
 
     if (response.message === "댓글이 삭제되었습니다.") {
       dispatch(removeComment(commentId));

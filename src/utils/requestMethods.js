@@ -106,7 +106,7 @@ export async function postFormRequest(url, options) {
 /* ====== Common Put Request Function ====== */
 export const putRequest = async (url, options = {}) => {
   const token = getTokenWithExpiry();
-  console.log("PUT 요청 URL:", `${BASE_URL}${url}`); // URL 확인용 로그
+  // console.log("PUT 요청 URL:", `${BASE_URL}${url}`); // URL 확인용 로그
 
   try {
     const response = await fetch(`${BASE_URL}${url}`, {
@@ -118,9 +118,9 @@ export const putRequest = async (url, options = {}) => {
       ...options,
     });
 
-    console.log("PUT 요청 응답 상태:", response.status); // 응답 상태 확인
+    // console.log("PUT 요청 응답 상태:", response.status); // 응답 상태 확인
     const data = await response.json();
-    console.log("PUT 요청 응답 데이터:", data); // 응답 데이터 확인
+    // console.log("PUT 요청 응답 데이터:", data); // 응답 데이터 확인
 
     return data;
   } catch (error) {
@@ -149,7 +149,7 @@ export async function patchRequest(url, options) {
 /* ====== Common Delete Request Function ====== */
 export const deleteRequest = async (url) => {
   const token = getTokenWithExpiry();
-  console.log("DELETE 요청 URL:", `${BASE_URL}${url}`);
+  // console.log("DELETE 요청 URL:", `${BASE_URL}${url}`);
 
   try {
     const response = await fetch(`${BASE_URL}${url}`, {
@@ -160,9 +160,9 @@ export const deleteRequest = async (url) => {
       },
     });
 
-    console.log("DELETE 요청 응답 상태:", response.status);
+    // console.log("DELETE 요청 응답 상태:", response.status);
     const data = await response.json();
-    console.log("DELETE 요청 응답 데이터:", data);
+    // console.log("DELETE 요청 응답 데이터:", data);
 
     return data;
   } catch (error) {
@@ -174,8 +174,8 @@ export const deleteRequest = async (url) => {
 /* ====== Common GET Request Function ====== */
 export async function getRequest(url) {
   const token = getTokenWithExpiry();
-  console.log("요청 URL:", `${BASE_URL}${url}`); // 전체 URL 확인
-  console.log("요청 헤더의 토큰:", token); // 토큰 확인
+  // console.log("요청 URL:", `${BASE_URL}${url}`); // 전체 URL 확인
+  // console.log("요청 헤더의 토큰:", token); // 토큰 확인
 
   try {
     const response = await fetch(`${BASE_URL}${url}`, {
@@ -186,9 +186,9 @@ export async function getRequest(url) {
       },
     });
 
-    console.log("서버 응답 상태:", response.status); // 응답 상태 확인
+    // console.log("서버 응답 상태:", response.status); // 응답 상태 확인
     const data = await response.json();
-    console.log("서버 응답 데이터:", data); // 응답 데이터 확인
+    // console.log("서버 응답 데이터:", data); // 응답 데이터 확인
 
     return data;
   } catch (error) {

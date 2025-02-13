@@ -34,16 +34,16 @@ const PostDetail = () => {
   const [currentUser, setCurrentUser] = useState(null);
 
   useEffect(() => {
-    console.log("useEffect 실행, postId:", postId);
+    // console.log("useEffect 실행, postId:", postId);
     fetchPostAndComments();
 
     const token = localStorage.getItem("token");
-    console.log("현재 토큰:", token);
+    // console.log("현재 토큰:", token);
 
     if (token) {
       try {
         const decoded = jwtDecode(token);
-        console.log("디코딩된 토큰:", decoded);
+        // console.log("디코딩된 토큰:", decoded);
         setCurrentUser(decoded);
       } catch (error) {
         console.error("토큰 디코딩 실패:", error);
@@ -54,10 +54,10 @@ const PostDetail = () => {
 
   const fetchPostAndComments = async () => {
     try {
-      console.log("게시물 ID:", postId);
+      // console.log("게시물 ID:", postId);
       // 게시물 데이터 가져오기
       const postResponse = await getRequest(`write/${postId}`);
-      console.log("게시물 서버 응답:", postResponse);
+      // console.log("게시물 서버 응답:", postResponse);
 
       if (postResponse.success && postResponse.data) {
         setPost(postResponse.data);
@@ -143,14 +143,14 @@ const PostDetail = () => {
         content: post.content,
       };
 
-      console.log("게시글 수정 요청:", requestData);
-      console.log("요청 URL:", `write/${postId}`);
+      // console.log("게시글 수정 요청:", requestData);
+      // console.log("요청 URL:", `write/${postId}`);
 
       const response = await putRequest(`write/${postId}`, {
         body: JSON.stringify(requestData),
       });
 
-      console.log("게시글 수정 응답:", response);
+      // console.log("게시글 수정 응답:", response);
 
       if (response.success) {
         setIsEditing(false);
