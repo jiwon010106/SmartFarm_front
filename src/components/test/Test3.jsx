@@ -10,7 +10,7 @@ const Test3 = () => {
       {
         src: "https://cdn.pixabay.com/photo/2016/09/21/04/46/barley-field-1684052_1280.jpg",
         link: "/",
-        title: "AnI Farm",
+        title: "테스트 화면입니다",
         content: (
           <div className="absolute inset-0 flex flex-col items-center justify-center drop-shadow-[0_2px_2px_rgba(0,0,0,0.5)] text-white overflow-hidden">
             <h1 className="text-4xl font-bold mb-4 text-shadow-lg z-10">
@@ -28,27 +28,27 @@ const Test3 = () => {
       {
         src: "http://www.cimon.co.kr/wp-content/uploads/2017/02/farm_02-e1486360904274.jpg",
         link: "/pricingInformation",
-        title: "소비 트렌드",
+        title: "매인 화면은",
       },
       {
         src: "https://cdn.hankyung.com/photo/202311/01.32189912.1.jpg",
         link: "/sellInformation",
-        title: "가격예측",
+        title: "Accordion 아이템",
       },
       {
         src: "https://img.etnews.com/photonews/2208/1564644_20220824165655_096_0003.jpg",
         link: "/pests",
-        title: "병충해",
+        title: "jsx 파일로",
       },
       {
         src: "https://cdn.knupresscenter.com/news/photo/202203/20689_7427_3041.jpg",
         link: "/trainingMethod",
-        title: "작물육성방법",
+        title: "이동했습니다",
       },
       {
         src: "https://www.industrynews.co.kr/news/photo/201807/24889_15849_5548.jpg",
         link: "/Community",
-        title: "게시글 작성",
+        title: "감사합니다",
       },
     ],
     []
