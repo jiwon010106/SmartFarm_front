@@ -24,6 +24,7 @@ import PostDetail from "./components/community/PostDetail";
 import Write from "./components/community/Write";
 import { useDispatch } from "react-redux";
 import { checkLoginStatus, logout } from "./redux/slices/authslice";
+import AccordionItem from "./components/common/AccordionItem";
 
 function App() {
   const dispatch = useDispatch();
@@ -118,6 +119,7 @@ function App() {
           <Route path="/test1" element={<Test1 />} />
           <Route path="/test2" element={<Test2 />} />
           <Route path="/test3" element={<Test3 />} />
+          <Route path="/accordionitem" element={<AccordionItem />} />
         </Routes>
         <Footer />
       </div>

@@ -4,7 +4,7 @@ import { createTop5Chart } from "../../data/createTop10Chart";
 import { fetchGetTop5Data } from "../../redux/slices/apiSlice";
 import { Link } from "react-router-dom";
 // import landingImg from "../../assets/main/mainlanding.jpg";
-import Test3 from "../test/Test3";
+import AccordionItem from "../common/AccordionItem";
 import Test1 from "../test/Test1";
 
 const Home = () => {
@@ -30,7 +30,7 @@ const Home = () => {
   return (
     <div className="w-full">
       {/* 아코디안 아이템 */}
-      <Test3 />
+      <AccordionItem />
       <div className="relative">
         {/* 날씨정보 API */}
         <div className="flex justify-center items-center relative max-h-[600px] min-h-[300px]">
