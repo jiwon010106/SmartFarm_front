@@ -68,8 +68,8 @@ const apiSlice = createSlice({
       })
       .addCase(fetchGetMarketData.rejected, (state, action) => {
         state.loading = false;
-        state.error = action.payload || "데이터 로딩 실패";
-        console.error("마켓 데이터 로딩 실패:", action.payload);
+        state.error = action.error.message || "데이터 로딩 실패";
+        console.error("마켓 데이터 로딩 실패:", action.error);
       })
 
       .addCase(fetchGetTop10Data.fulfilled, handleFulfilled("getTop10Data"))
