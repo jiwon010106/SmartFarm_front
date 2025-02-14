@@ -21,19 +21,27 @@ const Weather = () => {
     const fetchData = async () => {
       try {
         setLoading(true);
-        // 날씨 데이터 가져오기
         const weatherResponse = await axios.get(
-          "http://localhost:8000/weather?city=Seoul"
+          "http://localhost:8000/weather",
+          {
+            params: { city: 'Seoul' },
+            headers: {
+              'Accept': 'application/json',
+            }
+          }
         );
 
-        console.log("날씨 데이터:", weatherResponse.data);
+        console.log("날씨 데이터 응답:", weatherResponse);
 
-        if (weatherResponse.data.list) {
-          const dailyData = processWeatherData(weatherResponse.data.list);
+        // raw 데이터에서 list 추출
+        if (weatherResponse.data && weatherResponse.data.raw && weatherResponse.data.raw.list) {
+          const dailyData = processWeatherData(weatherResponse.data.raw.list);
           setWeatherData(dailyData);
+        } else {
+          throw new Error("날씨 데이터 형식이 올바르지 않습니다");
         }
       } catch (err) {
-        console.error("데이터 가져오기 오류:", err.response?.data || err.message);
+        console.error("데이터 가져오기 오류:", err);
         setError(err.message);
       } finally {
         setLoading(false);
@@ -44,51 +52,44 @@ const Weather = () => {
   }, []);
 
   const processWeatherData = (list) => {
+    if (!Array.isArray(list)) {
+      console.error("리스트 데이터가 배열이 아닙니다:", list);
+      return [];
+    }
+
     const dailyData = [];
     const today = new Date();
-
+    
     for (let i = 0; i < 6; i++) {
       const date = new Date(today);
       date.setDate(today.getDate() + i);
-
-      const dayData = list.filter((item) => {
+      
+      // 해당 날짜의 데이터 필터링
+      const dayData = list.filter(item => {
         const itemDate = new Date(item.dt * 1000);
         return itemDate.getDate() === date.getDate();
       });
 
       if (dayData.length > 0) {
-        let maxTemp = -Infinity;
-        let minTemp = Infinity;
-        let sumTemp = 0;
-        let totalRain = 0;
-        let maxPop = 0;
-
-        dayData.forEach((data) => {
-          maxTemp = Math.max(maxTemp, data.main.temp);
-          minTemp = Math.min(minTemp, data.main.temp);
-          sumTemp += data.main.temp;
-          if (data.rain && data.rain["3h"]) {
-            totalRain += data.rain["3h"];
-          }
-          if (data.pop) {
-            maxPop = Math.max(maxPop, data.pop);
-          }
-        });
-
-        dailyData.push({
+        // 일일 데이터 계산
+        const dayWeather = {
           dt: date.getTime() / 1000,
           main: {
-            temp_max: maxTemp,
-            temp_min: minTemp,
-            temp: sumTemp / dayData.length,
-            humidity: dayData[0].main.humidity,
+            temp_max: Math.max(...dayData.map(d => d.main.temp_max)),
+            temp_min: Math.min(...dayData.map(d => d.main.temp_min)),
+            temp: dayData.reduce((sum, d) => sum + d.main.temp, 0) / dayData.length,
+            humidity: dayData[0].main.humidity
           },
           weather: dayData[0].weather,
-          rain: totalRain,
-          pop: Math.round(maxPop * 100),
-        });
+          pop: Math.round(Math.max(...dayData.map(d => d.pop || 0)) * 100),
+          rain: dayData.reduce((sum, d) => sum + (d.rain?.['3h'] || 0), 0)
+        };
+        
+        dailyData.push(dayWeather);
       }
     }
+
+    console.log("처리된 일일 데이터:", dailyData);
     return dailyData;
   };
 
