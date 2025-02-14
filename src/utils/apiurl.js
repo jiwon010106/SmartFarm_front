@@ -12,7 +12,7 @@ const DELETE_AUTH_API_URL = `${rootPath}/auth/delete_user`;
 
 const GET_MARKET_API_URL = "market";
 const GET_TOP10_API_URL = "top10";
-const GET_MYPAGE_API_URL = `${rootPath}/auth/mypage`;
+const GET_MYPAGE_API_URL = "mypage";
 
 export {
   POST_SALES_API_URL,
