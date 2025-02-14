@@ -1,11 +1,6 @@
 import "./App.css";
 import React, { useEffect, useCallback } from "react";
-import {
-  BrowserRouter as Router,
-  Routes,
-  Route,
-  useNavigate,
-} from "react-router-dom";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Home from "./components/common/Home";
 import Header from "./components/common/Header";
 import Footer from "./components/common/Footer";
@@ -23,7 +18,7 @@ import TrainingMethod from "./components/trainingMethod/TrainingMethod";
 import PostDetail from "./components/community/PostDetail";
 import Write from "./components/community/Write";
 import { useDispatch } from "react-redux";
-import { checkLoginStatus, logout } from "./redux/slices/authslice";
+import { logout } from "./redux/slices/authslice";
 import AccordionItem from "./components/common/AccordionItem";
 
 function App() {

@@ -2,8 +2,6 @@ import React, { useEffect, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { createTop5Chart } from "../../data/createTop10Chart";
 import { fetchGetTop5Data } from "../../redux/slices/apiSlice";
-import { Link } from "react-router-dom";
-// import landingImg from "../../assets/main/mainlanding.jpg";
 import AccordionItem from "../common/AccordionItem";
 import Test1 from "../test/Test1";
 

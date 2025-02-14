@@ -1,10 +1,6 @@
 import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import {
-  selectPosts,
-  selectLoading,
-  getPostsSuccess,
-} from "../../redux/slices/writeSlice";
+import { selectLoading, getPostsSuccess } from "../../redux/slices/writeSlice";
 import WriteModal from "./WriteModal";
 import { useNavigate } from "react-router-dom";
 
