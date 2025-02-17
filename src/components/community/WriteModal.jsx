@@ -5,7 +5,7 @@ import {
   createPostSuccess,
   createPostFailure,
 } from "../../redux/slices/writeSlice";
-import { postMyMediRequest } from "../../utils/requestMethods";
+import { postRequest } from "../../utils/requestMethods";
 import Swal from "sweetalert2";
 
 const CreatePostModal = ({ isOpen, onClose }) => {
@@ -18,36 +18,55 @@ const CreatePostModal = ({ isOpen, onClose }) => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    dispatch(createPostStart());
 
     try {
-      const response = await postMyMediRequest("write/create", {
-        body: JSON.stringify(postData),
+      const formData = {
+        title: postData.title,
+        content: postData.content,
+        category: postData.category,
+      };
+
+      console.log("게시글 작성 요청:", formData);
+
+      dispatch(createPostStart());
+
+      const response = await postRequest("write/create", {
+        body: JSON.stringify(formData),
       });
 
-      if (response.status === 201) {
+      console.log("게시글 작성 응답:", response);
+
+      if (response.success || response.status === 201) {
         dispatch(createPostSuccess(response.data));
-        setPostData({ title: "", content: "", category: "general" });
+
         await Swal.fire({
-          title: "성공!",
-          text: "게시글이 성공적으로 작성되었습니다.",
           icon: "success",
+          title: "성공",
+          text: "게시글이 작성되었습니다.",
         });
         onClose();
+        window.location.href = "/Community";
       } else {
-        throw new Error("게시글 작성에 실패했습니다.");
+        throw new Error(response.message || "게시글 작성에 실패했습니다.");
       }
     } catch (error) {
       console.error("게시글 작성 오류:", error);
-      dispatch(
-        createPostFailure(error.message || "게시글 작성에 실패했습니다.")
-      );
-      await Swal.fire({
-        title: "오류",
-        text: "게시글 작성에 실패했습니다.",
+      dispatch(createPostFailure(error.message));
+
+      Swal.fire({
         icon: "error",
+        title: "오류",
+        text: error.message || "게시글 작성에 실패했습니다.",
       });
     }
+  };
+
+  const isFormValid = () => {
+    return (
+      postData.title.trim() !== "" &&
+      postData.content.trim() !== "" &&
+      postData.category !== ""
+    );
   };
 
   if (!isOpen) return null;
@@ -121,9 +140,10 @@ const CreatePostModal = ({ isOpen, onClose }) => {
             </button>
             <button
               type="submit"
-              className="px-4 py-2 bg-green-700 text-white rounded-lg hover:bg-green-800"
+              className="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600 disabled:bg-gray-400"
+              disabled={!isFormValid()}
             >
-              게시글 작성
+              작성하기
             </button>
           </div>
         </form>

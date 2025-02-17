@@ -1,19 +1,31 @@
 import React, { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import Swal from "sweetalert2";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  fetchComments,
+  createComment,
+  editComment,
+  deleteComment,
+} from "../../redux/slices/commentSlice";
 import {
   getRequest,
-  postRequest,
-  deleteRequest,
   putRequest,
+  deleteRequest,
 } from "../../utils/requestMethods";
+import Swal from "sweetalert2";
 import { jwtDecode } from "jwt-decode";
 
 const PostDetail = () => {
   const { postId } = useParams();
   const navigate = useNavigate();
+  const dispatch = useDispatch();
+
+  // Redux state에서 댓글 데이터 가져오기
+  const comments = useSelector((state) => state.comments.comments);
+  const commentLoading = useSelector((state) => state.comments.loading);
+  const commentError = useSelector((state) => state.comments.error);
+
   const [post, setPost] = useState(null);
-  const [comments, setComments] = useState([]);
   const [loading, setLoading] = useState(true);
   const [newComment, setNewComment] = useState("");
   const [isEditing, setIsEditing] = useState(false);
@@ -22,58 +34,35 @@ const PostDetail = () => {
   const [currentUser, setCurrentUser] = useState(null);
 
   useEffect(() => {
-    console.log("useEffect 실행, postId:", postId);
+    // console.log("useEffect 실행, postId:", postId);
     fetchPostAndComments();
 
     const token = localStorage.getItem("token");
-    console.log("현재 토큰:", token);
+    // console.log("현재 토큰:", token);
 
     if (token) {
       try {
         const decoded = jwtDecode(token);
-        console.log("디코딩된 토큰:", decoded);
+        // console.log("디코딩된 토큰:", decoded);
         setCurrentUser(decoded);
       } catch (error) {
         console.error("토큰 디코딩 실패:", error);
         localStorage.removeItem("token");
       }
     }
-  }, [postId]);
+  }, [postId, dispatch]);
 
   const fetchPostAndComments = async () => {
     try {
-      console.log("게시물 ID:", postId);
+      // console.log("게시물 ID:", postId);
       // 게시물 데이터 가져오기
       const postResponse = await getRequest(`write/${postId}`);
-      console.log("게시물 서버 응답:", postResponse);
+      // console.log("게시물 서버 응답:", postResponse);
 
       if (postResponse.success && postResponse.data) {
         setPost(postResponse.data);
-
-        // 댓글 데이터 따로 가져오기
-        try {
-          const commentsResponse = await getRequest(`comments/${postId}`);
-          console.log("댓글 서버 응답:", commentsResponse);
-
-          // 댓글 응답이 배열인 경우 직접 사용
-          if (Array.isArray(commentsResponse)) {
-            setComments(commentsResponse);
-            console.log("설정된 댓글:", commentsResponse);
-          } else if (
-            commentsResponse.success &&
-            Array.isArray(commentsResponse.data)
-          ) {
-            // success 구조인 경우
-            setComments(commentsResponse.data);
-            console.log("설정된 댓글:", commentsResponse.data);
-          } else {
-            console.log("댓글이 없습니다");
-            setComments([]);
-          }
-        } catch (error) {
-          console.error("댓글 로딩 실패:", error);
-          setComments([]);
-        }
+        // Redux thunk를 통해 댓글 데이터 가져오기
+        dispatch(fetchComments(postId));
       } else {
         console.error("게시물 데이터가 없습니다:", postResponse);
         Swal.fire({
@@ -131,20 +120,16 @@ const PostDetail = () => {
     if (!newComment.trim()) return;
 
     try {
-      console.log("댓글 작성 요청:", { post_id: postId, content: newComment });
-      const response = await postRequest(`comments`, {
-        body: JSON.stringify({
-          post_id: postId,
+      // Redux thunk를 통해 댓글 작성
+      await dispatch(
+        createComment({
+          post_id: parseInt(postId),
           content: newComment,
-        }),
-      });
-      console.log("댓글 작성 응답:", response);
+        })
+      );
 
-      if (response.success) {
-        setNewComment("");
-        await fetchPostAndComments(); // 댓글 목록 새로고침
-        Swal.fire("성공", "댓글이 작성되었습니다.", "success");
-      }
+      setNewComment("");
+      Swal.fire("성공", "댓글이 작성되었습니다.", "success");
     } catch (error) {
       console.error("댓글 작성 실패:", error);
       Swal.fire("오류", "댓글 작성에 실패했습니다.", "error");
@@ -153,20 +138,19 @@ const PostDetail = () => {
 
   const handleEditPost = async () => {
     try {
-      console.log("게시글 수정 요청:", {
+      const requestData = {
         title: post.title,
         content: post.content,
-      });
+      };
 
-      // URL 경로 수정: /api/write/22 형식으로 변경
+      // console.log("게시글 수정 요청:", requestData);
+      // console.log("요청 URL:", `write/${postId}`);
+
       const response = await putRequest(`write/${postId}`, {
-        body: JSON.stringify({
-          title: post.title,
-          content: post.content,
-        }),
+        body: JSON.stringify(requestData),
       });
 
-      console.log("게시글 수정 응답:", response);
+      // console.log("게시글 수정 응답:", response);
 
       if (response.success) {
         setIsEditing(false);
@@ -175,35 +159,28 @@ const PostDetail = () => {
           title: "수정 완료",
           text: "게시글이 성공적으로 수정되었습니다.",
         });
-        // 수정된 내용 새로고침
         await fetchPostAndComments();
       } else {
-        throw new Error("게시글 수정에 실패했습니다.");
+        throw new Error(response.message || "게시글 수정에 실패했습니다.");
       }
     } catch (error) {
       console.error("게시글 수정 실패:", error);
       await Swal.fire({
         icon: "error",
         title: "오류 발생",
-        text: "게시글 수정 중 오류가 발생했습니다.",
+        text: error.message || "게시글 수정 중 오류가 발생했습니다.",
       });
     }
   };
 
   const handleEditComment = async (commentId) => {
     try {
-      console.log("댓글 수정 요청:", { commentId, content: editedContent });
-      const response = await putRequest(`comments/${commentId}`, {
-        body: JSON.stringify({ content: editedContent }),
-      });
-      console.log("댓글 수정 응답:", response);
+      // Redux thunk를 통해 댓글 수정
+      await dispatch(editComment(commentId, editedContent, postId));
 
-      if (response.success) {
-        setEditingCommentId(null);
-        setEditedContent("");
-        await fetchPostAndComments(); // 댓글 목록 새로고침
-        Swal.fire("성공", "댓글이 수정되었습니다.", "success");
-      }
+      setEditingCommentId(null);
+      setEditedContent("");
+      Swal.fire("성공", "댓글이 수정되었습니다.", "success");
     } catch (error) {
       console.error("댓글 수정 실패:", error);
       Swal.fire("오류", "댓글 수정에 실패했습니다.", "error");
@@ -224,14 +201,9 @@ const PostDetail = () => {
 
     if (result.isConfirmed) {
       try {
-        console.log("댓글 삭제 요청:", commentId);
-        const response = await deleteRequest(`comments/${commentId}`);
-        console.log("댓글 삭제 응답:", response);
-
-        if (response.success) {
-          await fetchPostAndComments(); // 댓글 목록 새로고침
-          Swal.fire("삭제 완료!", "댓글이 삭제되었습니다.", "success");
-        }
+        // Redux thunk를 통해 댓글 삭제
+        await dispatch(deleteComment(commentId));
+        Swal.fire("삭제 완료!", "댓글이 삭제되었습니다.", "success");
       } catch (error) {
         console.error("댓글 삭제 실패:", error);
         Swal.fire("오류", "댓글 삭제에 실패했습니다.", "error");
@@ -348,6 +320,7 @@ const PostDetail = () => {
           <button
             type="submit"
             className="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700"
+            disabled={!newComment.trim()}
           >
             댓글 작성
           </button>
@@ -374,6 +347,7 @@ const PostDetail = () => {
                       <button
                         onClick={() => handleEditComment(comment.comment_id)}
                         className="px-3 py-1 bg-green-500 text-white rounded text-sm"
+                        disabled={!editedContent.trim()}
                       >
                         저장
                       </button>

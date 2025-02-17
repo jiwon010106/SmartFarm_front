@@ -1,11 +1,6 @@
 import "./App.css";
 import React, { useEffect, useCallback } from "react";
-import {
-  BrowserRouter as Router,
-  Routes,
-  Route,
-  useNavigate,
-} from "react-router-dom";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Home from "./components/common/Home";
 import Header from "./components/common/Header";
 import Footer from "./components/common/Footer";

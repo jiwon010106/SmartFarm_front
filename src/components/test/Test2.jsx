@@ -12,6 +12,11 @@ const Test2 = () => {
         setLoading(true);
         const response = await axios.get('http://localhost:8000/predictions/Seoul');
         console.log('API 응답:', response.data);
+        
+        if (response.data.error) {
+          throw new Error(response.data.error);
+        }
+        
         setPredictions(response.data.predictions);
       } catch (err) {
         console.error('예측 데이터 가져오기 오류:', err);

@@ -120,6 +120,24 @@ export const fetchDeleteAuthData = deleteAuthFetchThunk(
   DELETE_AUTH_API_URL
 );
 
+// 마이페이지 데이터 조회 액션 추가
+export const fetchUserInfo = createAsyncThunk(
+  "auth/fetchUserInfo",
+  async (_, { rejectWithValue }) => {
+    try {
+      const token = localStorage.getItem("token");
+      const response = await axios.get("http://localhost:9000/auth/mypage", {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      return response.data;
+    } catch (error) {
+      return rejectWithValue(error.response.data);
+    }
+  }
+);
+
 // handleFulfilled 함수 정의 : 요청 성공 시 상태 업데이트 로직을 별도의 함수로 분리
 const handleFulfilled = (stateKey) => (state, action) => {
   state[stateKey] = action.payload; // action.payload에 응답 데이터가 들어있음
@@ -147,6 +165,9 @@ const authSlice = createSlice({
     loading: false,
     user: null,
     isAuthenticated: false,
+    userInfo: null,
+    userInfoLoading: false,
+    userInfoError: null,
   },
   reducers: {
     verifyEmail: (state, action) => {
@@ -236,7 +257,20 @@ const authSlice = createSlice({
       .addCase(fetchUpdateAuthData.fulfilled, (state, action) => {
         state.updateAuthData = action.payload;
       })
-      .addCase(fetchUpdateAuthData.rejected, handleRejected);
+      .addCase(fetchUpdateAuthData.rejected, handleRejected)
+
+      .addCase(fetchUserInfo.pending, (state) => {
+        state.userInfoLoading = true;
+        state.userInfoError = null;
+      })
+      .addCase(fetchUserInfo.fulfilled, (state, action) => {
+        state.userInfoLoading = false;
+        state.userInfo = action.payload;
+      })
+      .addCase(fetchUserInfo.rejected, (state, action) => {
+        state.userInfoLoading = false;
+        state.userInfoError = action.payload;
+      });
   },
 });
 
