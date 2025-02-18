@@ -134,7 +134,7 @@ const AccordionItem = () => {
         {images.map((image, index) => (
           <div
             key={index}
-            className={`accordion-item relative inline-block cursor-pointer rounded-[3vw] h-[60vh] mx-[1vw] bg-center bg-cover transition-transform duration-300 ease-out
+            className={`accordion-item relative inline-block cursor-pointer rounded-[10px] h-[60vh] mx-[1vw] bg-center bg-cover transition-transform duration-300 ease-out
               ${activeIndex === index ? "z-10" : "z-0"}`}
             style={{
               backgroundImage: `url(${image.src})`,
